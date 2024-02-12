@@ -33,7 +33,9 @@ service / on new fhirr4:Listener(9090, apiConfig) {
 
     // Read the current state of single resource based on its id.
     isolated resource function get fhir/r4/MedicationRequest/[string id] (r4:FHIRContext fhirContext) returns MedicationRequest|r4:OperationOutcome|r4:FHIRError {
-        return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
+        MedicationRequest medicationRequest={
+        requester: {}, medicationReference: {}, subject: {}, medicationCodeableConcept: {}, intent: "option", status: "unknown"};
+        return medicationRequest;
     }
 
     // Read the state of a specific version of a resource based on its id.
@@ -42,8 +44,10 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     }
 
     // Search for resources based on a set of criteria.
-    isolated resource function get fhir/r4/MedicationRequest (r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError {
-        return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
+    isolated resource function get fhir/r4/MedicationRequest (r4:FHIRContext fhirContext) returns MedicationRequest {
+        MedicationRequest medicationRequest={
+        requester: {}, medicationReference: {}, subject: {}, medicationCodeableConcept: {}, intent: "option", status: "unknown"};
+        return medicationRequest;
     }
 
     // Create a new resource.

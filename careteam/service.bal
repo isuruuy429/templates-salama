@@ -33,7 +33,13 @@ service / on new fhirr4:Listener(9090, apiConfig) {
 
     // Read the current state of single resource based on its id.
     isolated resource function get fhir/r4/CareTeam/[string id] (r4:FHIRContext fhirContext) returns CareTeam|r4:OperationOutcome|r4:FHIRError {
-        return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
+        CareTeam careTeam = {
+            subject: {
+                reference : "Patient/1",
+                display : "Peter James Chalmers"
+            },
+            participant: []};
+        return careTeam;
     }
 
     // Read the state of a specific version of a resource based on its id.
@@ -42,8 +48,14 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     }
 
     // Search for resources based on a set of criteria.
-    isolated resource function get fhir/r4/CareTeam (r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError {
-        return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
+    isolated resource function get fhir/r4/CareTeam (r4:FHIRContext fhirContext) returns CareTeam {
+         CareTeam careTeam = {
+            subject: {
+                reference : "Patient/1",
+                display : "Peter James Chalmers"
+            },
+            participant: []};
+        return careTeam;
     }
 
     // Create a new resource.

@@ -62,7 +62,7 @@ service / on new fhirr4:Listener(9090, apiConfig) {
         return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
     }
 
-    // Search for resources based on a set of criteria.
+    // Search for resources based on a set of criteria. 
     isolated resource function get fhir/r4/Patient(r4:FHIRContext fhirContext) returns uscore501:USCorePatientProfile {
         uscore501:USCorePatientProfile patient = {
         active: true,
