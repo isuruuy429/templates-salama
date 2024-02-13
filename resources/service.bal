@@ -13,7 +13,7 @@ public type DocumentReference uscore501:USCoreDocumentReferenceProfile;
 public type Goal uscore501:USCoreGoalProfile;
 public type Immunization uscore501:USCoreImmunizationProfile;
 public type MedicationRequest uscore501:USCoreMedicationRequestProfile;
-public type Observation uscore501:USCoreLaboratoryResultObservationProfile|uscore501:USCorePediatricWeightForHeightObservationProfile|uscore501:USCorePediatricBMIforAgeObservationProfile|uscore501:USCorePulseOximetryProfile|uscore501:USCoreSmokingStatusProfile;
+public type Observation uscore501:USCoreLaboratoryResultObservationProfile;
 public type Procedure uscore501:USCoreProcedureProfile;
 
 
@@ -108,8 +108,11 @@ service / on new http:Listener(9090) {
         return medicationRequest;
     }
 
-    isolated resource function get fhir/r4/Observation(http:Request req) returns string {
-        return "observation";
+    isolated resource function get fhir/r4/Observation(http:Request req) returns Observation{
+        Observation observation ={
+             resourceType : "Observation",
+             code: {}, subject: {}, category: [], status: "preliminary"};
+        return observation;
     }
 
     isolated resource function get fhir/r4/Procedure(http:Request req)  returns string {

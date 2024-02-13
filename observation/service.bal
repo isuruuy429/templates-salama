@@ -40,8 +40,11 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     }
 
     // Search for resources based on a set of criteria.
-    isolated resource function get fhir/r4/Observation(r4:FHIRContext fhirContext) returns string {
-        return "observation";
+    isolated resource function get fhir/r4/Observation(r4:FHIRContext fhirContext) returns Observation{
+        Observation observation ={
+             resourceType : "Observation",
+             code: {}, subject: {}, category: [], status: "preliminary"};
+        return observation;
     }
 
     // Create a new resource.
