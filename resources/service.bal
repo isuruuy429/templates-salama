@@ -156,4 +156,30 @@ service / on new http:Listener(9090) {
     isolated resource function get fhir/r4/Procedure(http:Request req) returns string {
         return "procedure";
     }
+    isolated resource function get fhir/r4/ExplanationOfBenefit(http:Request req) returns uscore501:USCorePatientProfile {
+        uscore501:USCorePatientProfile patient = {
+        active: true,
+        name: [
+            {
+                family: "Doe",
+                given: ["Jhon"],
+                use: uscore501:CODE_USE_OFFICIAL,
+                prefix: ["Mr"]
+            }
+        ],
+        address: [
+            {
+                line: ["652 S. Lantern Dr."],
+                city: "New York",
+                country: "United States",
+                postalCode: "10022",
+                'type: uscore501:CODE_TYPE_PHYSICAL,
+                use: uscore501:CODE_USE_HOME
+            }
+        ],
+        identifier: [],
+        gender: uscore501:CODE_GENDER_MALE
+    };
+        return patient;
+    }
 }
