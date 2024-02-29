@@ -1,9 +1,12 @@
 import ballerina/http;
+import ballerinax/health.fhir.r4;
 import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.fhir.r4.uscore501;
 
 # Generic type to wrap all implemented profiles.
 # Add required profile types here.
+public type Patient uscore501:USCorePatientProfile;
+
 public type AllergyIntolerance uscore501:USCoreAllergyIntolerance;
 
 public type CarePlan uscore501:USCoreCarePlanProfile;
@@ -39,6 +42,58 @@ public type Coverage international401:Coverage;
 service / on new http:Listener(9090) {
 
     // Search for resources based on a set of criteria.
+    isolated resource function get fhir/r4/Patient/[string id](http:Request req) returns Patient|r4:OperationOutcome|r4:FHIRError {
+        uscore501:USCorePatientProfile patient = {
+            active: true,
+            name: [
+                {
+                    family: "Doe",
+                    given: ["Jhon"],
+                    use: uscore501:CODE_USE_OFFICIAL,
+                    prefix: ["Mr"]
+                }
+            ],
+            address: [
+                {
+                    line: ["652 S. Lantern Dr."],
+                    city: "New York",
+                    country: "United States",
+                    postalCode: "10022",
+                    'type: uscore501:CODE_TYPE_PHYSICAL,
+                    use: uscore501:CODE_USE_HOME
+                }
+            ],
+            identifier: [],
+            gender: uscore501:CODE_GENDER_MALE
+        };
+        return patient;
+    }
+    isolated resource function get fhir/r4/Patient(http:Request req) returns uscore501:USCorePatientProfile {
+        uscore501:USCorePatientProfile patient = {
+            active: true,
+            name: [
+                {
+                    family: "Doe",
+                    given: ["Jhon"],
+                    use: uscore501:CODE_USE_OFFICIAL,
+                    prefix: ["Mr"]
+                }
+            ],
+            address: [
+                {
+                    line: ["652 S. Lantern Dr."],
+                    city: "New York",
+                    country: "United States",
+                    postalCode: "10022",
+                    'type: uscore501:CODE_TYPE_PHYSICAL,
+                    use: uscore501:CODE_USE_HOME
+                }
+            ],
+            identifier: [],
+            gender: uscore501:CODE_GENDER_MALE
+        };
+        return patient;
+    }
     isolated resource function get fhir/r4/AllergyIntolerance(http:Request req) returns
         AllergyIntolerance {
         AllergyIntolerance allergyIntolerance = {
@@ -190,10 +245,10 @@ service / on new http:Listener(9090) {
 
     isolated resource function get fhir/r4/Coverage/[string id](http:Request req) returns Coverage {
         Coverage coverage = {
-            resourceType : "Coverage",
+            resourceType: "Coverage",
             payor: [],
             beneficiary: {
-                reference : "Patient/1"
+                reference: "Patient/1"
             },
             status: "active"
         };
