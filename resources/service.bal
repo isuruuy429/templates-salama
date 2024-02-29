@@ -1,4 +1,5 @@
 import ballerina/http;
+import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.fhir.r4.uscore501;
 
 # Generic type to wrap all implemented profiles.
@@ -26,6 +27,10 @@ public type MedicationRequest uscore501:USCoreMedicationRequestProfile;
 public type Observation uscore501:USCoreLaboratoryResultObservationProfile;
 
 public type Procedure uscore501:USCoreProcedureProfile;
+
+public type ExplanationOfBenefit international401:ExplanationOfBenefit;
+
+public type Coverage international401:Coverage;
 
 # initialize source system endpoint here
 
@@ -156,30 +161,43 @@ service / on new http:Listener(9090) {
     isolated resource function get fhir/r4/Procedure(http:Request req) returns string {
         return "procedure";
     }
-    isolated resource function get fhir/r4/ExplanationOfBenefit(http:Request req) returns uscore501:USCorePatientProfile {
-        uscore501:USCorePatientProfile patient = {
-        active: true,
-        name: [
-            {
-                family: "Doe",
-                given: ["Jhon"],
-                use: uscore501:CODE_USE_OFFICIAL,
-                prefix: ["Mr"]
-            }
-        ],
-        address: [
-            {
-                line: ["652 S. Lantern Dr."],
-                city: "New York",
-                country: "United States",
-                postalCode: "10022",
-                'type: uscore501:CODE_TYPE_PHYSICAL,
-                use: uscore501:CODE_USE_HOME
-            }
-        ],
-        identifier: [],
-        gender: uscore501:CODE_GENDER_MALE
-    };
-        return patient;
+    isolated resource function get fhir/r4/ExplanationOfBenefit(http:Request req) returns ExplanationOfBenefit {
+        ExplanationOfBenefit eob = {
+            resourceType: "ExplanationOfBenefit",
+            insurance: [
+                {
+                    focal: true,
+                    coverage: {
+                        reference: "Coverage/1"
+                    }
+                }
+            ],
+            provider: {
+                reference: "Practitioner/1"
+            },
+            use: "claim",
+            created: "",
+            insurer: {},
+            patient: {
+                reference: "Patient/1"
+            },
+            'type: {},
+            outcome: "partial",
+            status: "active"
+        };
+        return eob;
     }
+
+    isolated resource function get fhir/r4/Coverage/[string id](http:Request req) returns Coverage {
+        Coverage coverage = {
+            resourceType : "Coverage",
+            payor: [],
+            beneficiary: {
+                reference : "Patient/1"
+            },
+            status: "active"
+        };
+        return coverage;
+    }
+
 }
