@@ -45,30 +45,33 @@ service / on new http:Listener(9090) {
     isolated resource function get fhir/r4/Patient/[string id]() returns string|map<json>|error {
         lock {
             foreach json val in data {
-                map<json> fhirresource = check val.ensureType();
-                if (fhirresource.resourceType == "Patient" && fhirresource.id == id) {
-                    return fhirresource.clone();
+                map<json> fhirResource = check val.ensureType();
+                if (fhirResource.resourceType == "Patient" && fhirResource.id == id) {
+                    return fhirResource.clone();
                 }
             }
         }
         return error("No patient record found");
     }
 
-    isolated resource function get fhir/r4/Patient(http:Request req) returns string|map<json>|error {
+    isolated resource function get fhir/r4/Patient(http:Request req) returns map<json>[]|error {
         string[] queryParamKeys = req.getQueryParams().keys();
         lock {
+            map<json>[] patient = [];
             foreach json val in data {
-                map<json> fhirresource = check val.ensureType();
-                if fhirresource.hasKey("name") {
-                    json[] name = check fhirresource.name.ensureType();
+                map<json> fhirResource = check val.ensureType();
+                if fhirResource.hasKey("name") {
+                    json[] name = check fhirResource.name.ensureType();
                     map<json> nameObject = <map<json>>name[0];
                     string family = (check nameObject.family).toString();
                     string queryParamValue = req.getQueryParamValue(queryParamKeys[0]).toString();
-                    if (fhirresource.resourceType == "Patient" && family.equalsIgnoreCaseAscii(queryParamValue)) {
-                        return fhirresource.clone();
+                    if (fhirResource.resourceType == "Patient" && family.equalsIgnoreCaseAscii(queryParamValue)) {
+                        patient.push(fhirResource);
                     }
                 }
-
+            }
+            if patient.length() > 0 {
+                return patient.clone();
             }
         }
         return error("No patient record found");
@@ -203,9 +206,9 @@ service / on new http:Listener(9090) {
             map<json>[] eob = [];
 
             foreach json val in data {
-                map<json> fhirresource = check val.ensureType();
-                if (fhirresource.resourceType == "ExplanationOfBenefit" && (fhirresource.patient == patient)) {
-                    eob.push(fhirresource);
+                map<json> fhirResource = check val.ensureType();
+                if (fhirResource.resourceType == "ExplanationOfBenefit" && (fhirResource.patient == patient)) {
+                    eob.push(fhirResource);
                 }
             }
             if (eob.length() > 0) {
@@ -215,14 +218,13 @@ service / on new http:Listener(9090) {
         return error("No EOB record found");
     }
 
-    isolated resource function get fhir/r4/Coverage/[string id]() returns json[]|error {
+    isolated resource function get fhir/r4/Coverage(string patient, string _id) returns json[]|error {
         lock {
             map<json>[] coverage = [];
-
             foreach json val in data {
-                map<json> fhirresource = check val.ensureType();
-                if (fhirresource.resourceType == "Coverage" && (fhirresource.patient == id)) {
-                    coverage.push(fhirresource);
+                map<json> fhirResource = check val.ensureType();
+                if (fhirResource.resourceType == "Coverage" && (fhirResource.patient == patient) && ((_id=="\"\"")||(fhirResource.id==_id))) {
+                    coverage.push(fhirResource);
                 }
             }
             if (coverage.length() > 0) {
@@ -435,7 +437,7 @@ isolated json[] data = [
             "end": null
         },
         "holder": {
-            "reference": "Patient/2"
+            "reference": "Patient/1"
         },
         "payor": [
             {
@@ -478,7 +480,7 @@ isolated json[] data = [
             "end": "2024-12-31"
         },
         "holder": {
-            "reference": "Patient/3"
+            "reference": "Patient/2"
         },
         "payor": [
             {
