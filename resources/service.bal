@@ -59,9 +59,16 @@ service / on new http:Listener(9090) {
         lock {
             foreach json val in data {
                 map<json> fhirresource = check val.ensureType();
-                if (fhirresource.resourceType == "Patient" && fhirresource.id == req.getQueryParamValue(queryParamKeys[0])) {
-                    return fhirresource.clone();
+                if fhirresource.hasKey("name") {
+                    json[] name = check fhirresource.name.ensureType();
+                    map<json> nameObject = <map<json>>name[0];
+                    string family = (check nameObject.family).toString();
+                    string queryParamValue = req.getQueryParamValue(queryParamKeys[0]).toString();
+                    if (fhirresource.resourceType == "Patient" && family.equalsIgnoreCaseAscii(queryParamValue)) {
+                        return fhirresource.clone();
+                    }
                 }
+
             }
         }
         return error("No patient record found");
