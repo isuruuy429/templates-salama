@@ -54,8 +54,7 @@ service / on new http:Listener(9090) {
         return error("No patient record found");
     }
 
-    isolated resource function get fhir/r4/Patient(http:Request req) returns map<json>[]|error {
-        string[] queryParamKeys = req.getQueryParams().keys();
+    isolated resource function get fhir/r4/Patient(string family) returns json[]|error {
         lock {
             map<json>[] patient = [];
             foreach json val in data {
@@ -63,9 +62,8 @@ service / on new http:Listener(9090) {
                 if fhirResource.hasKey("name") {
                     json[] name = check fhirResource.name.ensureType();
                     map<json> nameObject = <map<json>>name[0];
-                    string family = (check nameObject.family).toString();
-                    string queryParamValue = req.getQueryParamValue(queryParamKeys[0]).toString();
-                    if (fhirResource.resourceType == "Patient" && family.equalsIgnoreCaseAscii(queryParamValue)) {
+                    string familyName = (check nameObject.family).toString();
+                    if (fhirResource.resourceType == "Patient" && familyName.equalsIgnoreCaseAscii(family)) {
                         patient.push(fhirResource);
                     }
                 }
