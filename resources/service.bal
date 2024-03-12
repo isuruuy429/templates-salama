@@ -1,35 +1,13 @@
 import ballerina/http;
+import ballerina/time;
+import ballerinax/health.fhir.r4;
+import ballerinax/health.fhirr4;
 import ballerinax/health.fhir.r4.international401;
-import ballerinax/health.fhir.r4.uscore501;
-import ballerina/log;
+import ballerinax/health.fhir.r4.parser as fhirParser;
 
 # Generic type to wrap all implemented profiles.
 # Add required profile types here.
-public type Patient uscore501:USCorePatientProfile;
-
-public type AllergyIntolerance uscore501:USCoreAllergyIntolerance;
-
-public type CarePlan uscore501:USCoreCarePlanProfile;
-
-public type CareTeam uscore501:USCoreCareTeam;
-
-public type Condition uscore501:USCoreCondition;
-
-public type Device uscore501:USCoreImplantableDeviceProfile;
-
-public type DiagnosticReport uscore501:USCoreDiagnosticReportProfileNoteExchange|uscore501:USCoreDiagnosticReportProfileLaboratoryReporting;
-
-public type DocumentReference uscore501:USCoreDocumentReferenceProfile;
-
-public type Goal uscore501:USCoreGoalProfile;
-
-public type Immunization uscore501:USCoreImmunizationProfile;
-
-public type MedicationRequest uscore501:USCoreMedicationRequestProfile;
-
-public type Observation uscore501:USCoreLaboratoryResultObservationProfile;
-
-public type Procedure uscore501:USCoreProcedureProfile;
+public type Patient international401:Patient;
 
 public type ExplanationOfBenefit international401:ExplanationOfBenefit;
 
@@ -39,197 +17,111 @@ public type Coverage international401:Coverage;
 
 # A service representing a network-accessible API
 # bound to port `9090`.
-service / on new http:Listener(9090) {
+service / on new fhirr4:Listener(9090, apiConfig) {
 
-    // Search for resources based on a set of criteria.
-    isolated resource function get fhir/r4/Patient/[string id]() returns string|map<json>|error {
+    isolated resource function get fhir/r4/Patient/[string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError|error {
         lock {
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
                 if (fhirResource.resourceType == "Patient" && fhirResource.id == id) {
-                    return fhirResource.clone();
+                    Patient patient = check fhirParser:parse(fhirResource).ensureType();
+                    return patient.clone();
                 }
             }
         }
-        return error("No patient record found");
+        return r4:createFHIRError("Not found", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_FOUND);
     }
 
-    isolated resource function get fhir/r4/Patient(string family) returns json[]|error {
+    isolated resource function get fhir/r4/Patient(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
-            map<json>[] patient = [];
+            r4:StringSearchParameter[] queryParams = check fhirContext.getStringSearchParameter("family") ?: [];
+            string family = check queryParams[0].value.ensureType();
+            r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
+            r4:BundleEntry bundleEntry = {};
+            int count = 0;
+            json[] name = [];
+            map<json> nameObject = {};
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
                 if fhirResource.hasKey("name") {
-                    json[] name = check fhirResource.name.ensureType();
-                    map<json> nameObject = <map<json>>name[0];
+                    name = check fhirResource.name.ensureType();
+                    nameObject = <map<json>>name[0];
                     string familyName = (check nameObject.family).toString();
                     if (fhirResource.resourceType == "Patient" && familyName.equalsIgnoreCaseAscii(family)) {
-                        patient.push(fhirResource);
+                        bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                        bundle.entry[count] = bundleEntry;
+                        count += 1;
                     }
                 }
             }
-            if patient.length() > 0 {
-                return patient.clone();
+            if bundle.entry != [] {
+                return bundle.clone();
             }
         }
-        return error("No patient record found");
+        return r4:createFHIRError("Not found", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_FOUND);
     }
 
-    // isolated resource function get fhir/r4/AllergyIntolerance(http:Request req) returns
-    //     AllergyIntolerance {
-    //     AllergyIntolerance allergyIntolerance = {
-    //         resourceType: "AllergyIntolerance",
-    //         id: "1",
-    //         text: {
-    //             "status": "generated",
-    //             "div": ""
-    //         },
-    //         identifier: [],
-    //         clinicalStatus: {
-    //             "coding": [
-    //                 {
-    //                     "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
-    //                     "code": "active",
-    //                     "display": "Active"
-    //                 }
-    //             ]
-    //         },
-    //         code: {},
-    //         patient: {}
-    //     };
-    //     return allergyIntolerance;
-    // }
-
-    // isolated resource function get fhir/r4/CarePlan(http:Request req) returns CarePlan {
-    //     CarePlan carePlan = {
-    //         subject: {
-    //             reference: "Patient/1",
-    //             display: "Peter James Chalmers"
-    //         },
-    //         text: {
-    //             div: "",
-    //             status: "additional"
-    //         },
-    //         category: [],
-    //         intent: "option",
-    //         status: "unknown"
-    //     };
-    //     return carePlan;
-    // }
-
-    // isolated resource function get fhir/r4/CareTeam(http:Request req) returns CareTeam {
-    //     CareTeam careTeam = {
-    //         subject: {
-    //             reference: "Patient/1",
-    //             display: "Peter James Chalmers"
-    //         },
-    //         participant: []
-    //     };
-    //     return careTeam;
-    // }
-
-    // isolated resource function get fhir/r4/Condition(http:Request req) returns Condition {
-    //     Condition condition = {
-    //         code: {},
-    //         subject: {
-    //             reference: "Patient/1"
-    //         },
-    //         category: []
-    //     };
-    //     return condition;
-    // }
-
-    // isolated resource function get fhir/r4/Device(http:Request req) returns Device {
-    //     Device device = {
-    //         patient: {},
-    //         'type: {}
-    //     };
-    //     return device;
-    // }
-
-    // isolated resource function get fhir/r4/DiagnosticReport(http:Request req) returns string {
-    //     return "diagnosticReport";
-    // }
-
-    // isolated resource function get fhir/r4/DocumentReference(http:Request req) returns string {
-    //     return "DocumentReference";
-    // }
-
-    // isolated resource function get fhir/r4/Goal(http:Request req) returns string {
-    //     return "Goal";
-    // }
-
-    // isolated resource function get fhir/r4/Immunization(http:Request req) returns string {
-    //     return "Immunization";
-    // }
-
-    // isolated resource function get fhir/r4/MedicationRequest(http:Request req) returns MedicationRequest {
-    //     MedicationRequest medicationRequest = {
-    //         requester: {},
-    //         medicationReference: {},
-    //         subject: {},
-    //         medicationCodeableConcept: {},
-    //         intent: "option",
-    //         status: "unknown"
-    //     };
-    //     return medicationRequest;
-    // }
-
-    // isolated resource function get fhir/r4/Observation(http:Request req) returns Observation {
-    //     Observation observation = {
-    //         resourceType: "Observation",
-    //         code: {
-    //             "coding": [
-    //                 {
-    //                     "system": "http://loinc.org",
-    //                     "code": "2708-6",
-    //                     "display": "Body Weight"
-    //                 }
-    //             ]
-    //         },
-    //         subject: {},
-    //         category: [],
-    //         status: "preliminary"
-    //     };
-    //     return observation;
-    // }
-
-    // isolated resource function get fhir/r4/Procedure(http:Request req) returns string {
-    //     return "procedure";
-    // }
-
-    isolated resource function get fhir/r4/ExplanationOfBenefit(string patient) returns json[]|error {
-        log:printInfo(patient);
+    isolated resource function get fhir/r4/ExplanationOfBenefit(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
-            map<json>[] eob = [];
-
+            r4:ReferenceSearchParameter[] patientParams = check fhirContext.getReferenceSearchParameter("patient") ?: [];
+            string patient = check patientParams[0].id.ensureType();
+            r4:DateSearchParameter[]? createdDate = check fhirContext.getDateSearchParameter("created");
+            string prefix = createdDate != () ? createdDate[0].prefix.toString() : "";
+            time:Utc utc1 = [];
+            if createdDate is r4:DateSearchParameter[] {
+                time:Civil & readonly value = createdDate[0].value;
+                utc1 = check time:utcFromCivil(value);
+            }
+            time:Utc utc2 = [];
+            string date = "";
+            r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
+            r4:BundleEntry bundleEntry = {};
+            int count = 0;
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
-                if (fhirResource.resourceType == "ExplanationOfBenefit" && (fhirResource.patient == patient)) {
-                    eob.push(fhirResource);
+                if (fhirResource.resourceType == "ExplanationOfBenefit" && fhirResource.patient == patient) {
+                    date = (check fhirResource.created).toString() + "T00:00:00.00Z";
+                    utc2 = check time:utcFromString(date);
+                    if ((prefix == "gt" || prefix == "") && <int>(time:utcDiffSeconds(utc2, utc1)) > 0) {
+                        bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                        bundle.entry[count] = bundleEntry;
+                        count += 1;
+                    } else if ((prefix == "eq" || prefix == "") && <int>(time:utcDiffSeconds(utc2, utc1)) == 0) {
+                        bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                        bundle.entry[count] = bundleEntry;
+                        count += 1;
+                    }
                 }
             }
-            if (eob.length() > 0) {
-                return eob.clone();
+            if bundle.entry != [] {
+                return bundle.clone();
             }
         }
-        return error("No EOB record found");
+        return r4:createFHIRError("Not found", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_FOUND);
     }
 
-    isolated resource function get fhir/r4/Coverage(string patient, string _id) returns json[]|error {
+    isolated resource function get fhir/r4/Coverage(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
-            map<json>[] coverage = [];
+            r4:ReferenceSearchParameter[] patientParams = check fhirContext.getReferenceSearchParameter("patient") ?: [];
+            string patient = check patientParams[0].id.ensureType();
+            r4:TokenSearchParameter[] idParams = check fhirContext.getTokenSearchParameter("_id") ?: [];
+            string id = idParams != [] ? idParams[0].code.toString() : "";
+            r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
+            r4:BundleEntry bundleEntry = {};
+            int count = 0;
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
-                if (fhirResource.resourceType == "Coverage" && (fhirResource.patient == patient) && ((_id=="\"\"")||(fhirResource.id==_id))) {
-                    coverage.push(fhirResource);
+                if (fhirResource.resourceType == "Coverage" && (fhirResource.patient == patient) && ((id == "") || (fhirResource.id == id))) {
+                    bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                    bundle.entry[count] = bundleEntry;
+                    count += 1;
                 }
             }
-            if (coverage.length() > 0) {
-                return coverage.clone();
+            if bundle.entry != [] {
+                return bundle.clone();
             }
         }
-        return error("No coverage record found");
+        return r4:createFHIRError("Not found", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_FOUND);
     }
 
 }
@@ -337,6 +229,7 @@ isolated json[] data = [
         "resourceType": "ExplanationOfBenefit",
         "id": "1",
         "patient": "1",
+        "created": "2023-08-16",
         "serviceProvider": "Organization/2",
         "item": [
             {
@@ -352,6 +245,7 @@ isolated json[] data = [
         "resourceType": "ExplanationOfBenefit",
         "id": "2",
         "patient": "1",
+        "created": "2014-08-16",
         "diagnosis": [
             {"diagnosisCode": {"display": "Upper respiratory infection"}}
         ],
@@ -367,6 +261,7 @@ isolated json[] data = [
         "priorAuthorization": {
             "reference": "PriorAuthorization/123"
         },
+        "created": "2013-08-16",
         "item": [
             {
                 "service": {"display": "MRI scan"},
