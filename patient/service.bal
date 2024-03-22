@@ -18,6 +18,7 @@ import ballerinax/health.fhir.r4;
 import ballerinax/health.fhirr4;
 import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.fhir.r4.parser as fhirParser;
+import ballerina/log;
 
 # Generic type to wrap all implemented profiles.
 # Add required profile types here.
@@ -32,6 +33,8 @@ service /fhir/r4/Patient  on new fhirr4:Listener(9090, apiConfig) {
 
     // Read the current state of single resource based on its id.
     isolated resource function get [string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError|error {
+        log:printDebug("Patient/id API is invoked succesfully");
+        log:printInfo("Patient/id API is invoked succesfully");
         lock {
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
@@ -46,6 +49,8 @@ service /fhir/r4/Patient  on new fhirr4:Listener(9090, apiConfig) {
 
     // Search for resources based on a set of criteria.
     isolated resource function get .(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
+        log:printDebug("Patient API with query param is invoked succesfully");
+        log:printInfo("Patient API with query param is invoked succesfully");
         lock {
             r4:StringSearchParameter[] queryParams = check fhirContext.getStringSearchParameter("family") ?: [];
             string family = check queryParams[0].value.ensureType();
