@@ -102,6 +102,88 @@ paths:
       security:
       - default: []
       x-auth-type: Application & Application User
+    patch:
+      tags:
+      - PATCH
+      - Patient
+      parameters:
+      - name: id
+        in: path
+        description: logical identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: patch Patient operation successful
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+  /{id}/_history/{vid}:
+    get:
+      tags:
+      - GET
+      - Patient
+      parameters:
+      - name: id
+        in: path
+        description: logical identifier
+        required: true
+        schema:
+          type: string
+      - name: vid
+        in: path
+        description: version identifier
+        required: true
+        schema:
+          type: string
+      responses: 
+        "200":
+          description: Patient resource version retrieved successfully
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+  /{id}/_history:
+    get:
+      tags:
+      - GET
+      - Patient
+      parameters:
+      - name: id
+        in: path
+        description: logical identifier
+        required: true
+        schema:
+          type: string
+      responses: 
+        "200":
+          description: Patient history retrieved successfully
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+      security:
+      - default: []
+      x-auth-type: Application & Application User
+  /_history:
+    get:
+      tags:
+      - GET
+      - Patient
+      responses: 
+        "200":
+          description: history retrieved successfully
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+      security:
+      - default: []
+      x-auth-type: Application & Application User
 components:
   schemas:
     Resource:
