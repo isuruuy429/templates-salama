@@ -18,7 +18,6 @@ import ballerinax/health.fhir.r4;
 import ballerinax/health.fhirr4;
 import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.fhir.r4.parser as fhirParser;
-import ballerina/log;
 
 # Generic type to wrap all implemented profiles.
 # Add required profile types here.
@@ -33,8 +32,6 @@ service / on new fhirr4:Listener(9090, apiConfig) {
 
     // Read the current state of single resource based on its id.
     isolated resource function get [string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError|error {
-        log:printDebug("Patient/id API is invoked succesfully");
-        log:printInfo("Patient/id API is invoked succesfully");
         lock {
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
@@ -49,11 +46,11 @@ service / on new fhirr4:Listener(9090, apiConfig) {
 
     // Search for resources based on a set of criteria.
     isolated resource function get .(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
-        log:printDebug("Patient API with query param is invoked succesfully");
-        log:printInfo("Patient API with query param is invoked succesfully");
         lock {
-            r4:StringSearchParameter[] queryParams = check fhirContext.getStringSearchParameter("family") ?: [];
-            string family = check queryParams[0].value.ensureType();
+            r4:TokenSearchParameter[] idParam = check fhirContext.getTokenSearchParameter("_id") ?: [];
+            r4:StringSearchParameter[] familyParam = check fhirContext.getStringSearchParameter("family") ?: [];
+            string id = idParam != [] ? check idParam[0].code.ensureType() : "";
+            string family = familyParam != [] ? check familyParam[0].value.ensureType() : "";
             r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
             r4:BundleEntry bundleEntry = {};
             int count = 0;
@@ -65,7 +62,7 @@ service / on new fhirr4:Listener(9090, apiConfig) {
                     name = check fhirResource.name.ensureType();
                     nameObject = <map<json>>name[0];
                     string familyName = (check nameObject.family).toString();
-                    if (fhirResource.resourceType == "Patient" && familyName.equalsIgnoreCaseAscii(family)) {
+                    if (fhirResource.resourceType == "Patient" && (fhirResource.id == id || familyName.equalsIgnoreCaseAscii(family))) {
                         bundleEntry = {fullUrl: "", 'resource: fhirResource};
                         bundle.entry[count] = bundleEntry;
                         count += 1;
@@ -92,7 +89,7 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     // Update the current state of a resource completely.
     isolated resource function put [string id](r4:FHIRContext fhirContext, Patient patient) returns Patient|r4:OperationOutcome|r4:FHIRError {
         return r4:createFHIRError(" put Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
-    } 
+    }
 
     // Update the current state of a resource partially.
     isolated resource function patch [string id](r4:FHIRContext fhirContext, json patch) returns Patient|r4:OperationOutcome|r4:FHIRError {
