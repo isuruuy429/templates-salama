@@ -4,7 +4,7 @@ import ballerinax/health.fhirr4;
 
 # A service representing a network-accessible API
 # bound to port `9090`.
-service /fhir/r4/Coverage on new fhirr4:Listener(9090, apiConfig) {
+service / on new fhirr4:Listener(9090, apiConfig) {
 
     isolated resource function get .(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
