@@ -16,7 +16,7 @@ tags:
 - name: AllergyIntolerance
 - name: 4.0.1
 paths:
-  /fhir/r4/AllergyIntolerance:
+  /:
     get:
       tags:
       - GET
@@ -261,7 +261,7 @@ paths:
           description: create AllergyIntolerance operation successful
       security:
       - default: []
-  /fhir/r4/AllergyIntolerance/{id}:
+  /{id}:
     get:
       tags:
       - GET
