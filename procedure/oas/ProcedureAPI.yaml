@@ -1,15 +1,18 @@
 openapi: 3.0.1
 info:
-  title: Procedure
+  title: ProcedureAPI
   description: "A simplified version of the HL7 FHIR API for Procedure resource.\n\
-    Supported Profiles: \nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/procedure\n"
+    Supported Profiles: \nhttp://hl7.org/fhir/StructureDefinition/Procedure\n"
   contact:
     name: API Support
-    url: https://wso2.com/contact/`
-    email: user@email.com
+    url: https://wso2.com/contact/
+    email: info@wso2.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 tags:
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/procedure
+- name: international
 - name: Procedure
 - name: 4.0.1
 paths:
@@ -18,13 +21,9 @@ paths:
       tags:
       - GET
       - Procedure
+      summary: search Procedure
+      description: This operation is used to search a Procedure
       parameters:
-      - name: id
-        in: path
-        description: logical identifier
-        required: true
-        schema:
-          type: string
       - name: code
         in: query
         description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
@@ -47,62 +46,28 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
-      - name: date
+      - name: encounter
         in: query
-        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
-          \ Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html):\
-          \ Time period plan covers\r\n* [CareTeam](careteam.html): Time period team\
-          \ covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment\
-          \ was documented\r\n* [Composition](composition.html): Composition editing\
-          \ time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\
-          \n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time\
-          \ of the report\r\n* [Encounter](encounter.html): A date within the period\
-          \ the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided\
-          \ date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html):\
-          \ When history was recorded or last updated\r\n* [Flag](flag.html): Time\
-          \ period when flag is active\r\n* [Immunization](immunization.html): Vaccination\
-          \  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\
-          \n* [Observation](observation.html): Obtained date/time. If the obtained\
-          \ element is a period, a date that falls in the period\r\n* [Procedure](procedure.html):\
-          \ When the procedure was performed\r\n* [RiskAssessment](riskassessment.html):\
-          \ When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When\
-          \ the request was made"
+        description: "Multiple Resources: \r\n\r\n* [Composition](composition.html):\
+          \ Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter\
+          \ during which request was created\r\n* [DiagnosticReport](diagnosticreport.html):\
+          \ The Encounter when the order was made\r\n* [DocumentReference](documentreference.html):\
+          \ Context of the document  content\r\n* [Flag](flag.html): Alert relevant\
+          \ during encounter\r\n* [List](list.html): Context in which list created\r\
+          \n* [NutritionOrder](nutritionorder.html): Return nutrition orders with\
+          \ this encounter identifier\r\n* [Observation](observation.html): Encounter\
+          \ related to the observation\r\n* [Procedure](procedure.html): Encounter\
+          \ created as part of\r\n* [RiskAssessment](riskassessment.html): Where was\
+          \ assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter\
+          \ in which this request is made\r\n* [VisionPrescription](visionprescription.html):\
+          \ Return prescriptions with this encounter identifier"
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: date
-      - name: identifier
+        x-wso2-oh-fhirType: reference
+      - name: category
         in: query
-        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
-          \ External ids for this item\r\n* [CarePlan](careplan.html): External Ids\
-          \ for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\
-          \n* [Composition](composition.html): Version-independent identifier for\
-          \ the Composition\r\n* [Condition](condition.html): A unique identifier\
-          \ of the condition record\r\n* [Consent](consent.html): Identifier for this\
-          \ record (external references)\r\n* [DetectedIssue](detectedissue.html):\
-          \ Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html):\
-          \ Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html):\
-          \ An identifier for the report\r\n* [DocumentManifest](documentmanifest.html):\
-          \ Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html):\
-          \ Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s)\
-          \ by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html):\
-          \ Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html):\
-          \ A search by a record identifier\r\n* [Goal](goal.html): External Ids for\
-          \ this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the\
-          \ Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html):\
-          \ Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html):\
-          \ Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html):\
-          \ Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html):\
-          \ Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html):\
-          \ Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html):\
-          \ Return nutrition orders with this external identifier\r\n* [Observation](observation.html):\
-          \ The unique id for a particular observation\r\n* [Procedure](procedure.html):\
-          \ A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html):\
-          \ Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html):\
-          \ Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html):\
-          \ External identifier\r\n* [SupplyRequest](supplyrequest.html): Business\
-          \ Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html):\
-          \ Return prescriptions with this external identifier"
+        description: Classification of the procedure
         required: false
         schema:
           type: string
@@ -146,21 +111,23 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: reference
-      - name: encounter
+      - name: instantiates-uri
         in: query
-        description: "Multiple Resources: \r\n\r\n* [Composition](composition.html):\
-          \ Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter\
-          \ during which request was created\r\n* [DiagnosticReport](diagnosticreport.html):\
-          \ The Encounter when the order was made\r\n* [DocumentReference](documentreference.html):\
-          \ Context of the document  content\r\n* [Flag](flag.html): Alert relevant\
-          \ during encounter\r\n* [List](list.html): Context in which list created\r\
-          \n* [NutritionOrder](nutritionorder.html): Return nutrition orders with\
-          \ this encounter identifier\r\n* [Observation](observation.html): Encounter\
-          \ related to the observation\r\n* [Procedure](procedure.html): Encounter\
-          \ created as part of\r\n* [RiskAssessment](riskassessment.html): Where was\
-          \ assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter\
-          \ in which this request is made\r\n* [VisionPrescription](visionprescription.html):\
-          \ Return prescriptions with this encounter identifier"
+        description: Instantiates external protocol or definition
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: uri
+      - name: reason-reference
+        in: query
+        description: The justification that the procedure was performed
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: instantiates-canonical
+        in: query
+        description: Instantiates FHIR protocol or definition
         required: false
         schema:
           type: string
@@ -172,58 +139,9 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: reference
-      - name: category
-        in: query
-        description: Classification of the procedure
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: instantiates-canonical
-        in: query
-        description: Instantiates FHIR protocol or definition
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: instantiates-uri
-        in: query
-        description: Instantiates external protocol or definition
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: uri
-      - name: location
-        in: query
-        description: Where the procedure happened
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
       - name: part-of
         in: query
         description: Part of referenced event
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: performer
-        in: query
-        description: The reference to the practitioner
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: reason-code
-        in: query
-        description: Coded reason procedure performed
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: reason-reference
-        in: query
-        description: The justification that the procedure was performed
         required: false
         schema:
           type: string
@@ -236,6 +154,73 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
+      - name: date
+        in: query
+        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
+          \ Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html):\
+          \ Time period plan covers\r\n* [CareTeam](careteam.html): Time period team\
+          \ covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment\
+          \ was documented\r\n* [Composition](composition.html): Composition editing\
+          \ time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\
+          \n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time\
+          \ of the report\r\n* [Encounter](encounter.html): A date within the period\
+          \ the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided\
+          \ date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html):\
+          \ When history was recorded or last updated\r\n* [Flag](flag.html): Time\
+          \ period when flag is active\r\n* [Immunization](immunization.html): Vaccination\
+          \  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\
+          \n* [Observation](observation.html): Obtained date/time. If the obtained\
+          \ element is a period, a date that falls in the period\r\n* [Procedure](procedure.html):\
+          \ When the procedure was performed\r\n* [RiskAssessment](riskassessment.html):\
+          \ When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When\
+          \ the request was made"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: date
+      - name: performer
+        in: query
+        description: The reference to the practitioner
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: identifier
+        in: query
+        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
+          \ External ids for this item\r\n* [CarePlan](careplan.html): External Ids\
+          \ for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\
+          \n* [Composition](composition.html): Version-independent identifier for\
+          \ the Composition\r\n* [Condition](condition.html): A unique identifier\
+          \ of the condition record\r\n* [Consent](consent.html): Identifier for this\
+          \ record (external references)\r\n* [DetectedIssue](detectedissue.html):\
+          \ Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html):\
+          \ Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html):\
+          \ An identifier for the report\r\n* [DocumentManifest](documentmanifest.html):\
+          \ Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html):\
+          \ Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s)\
+          \ by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html):\
+          \ Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html):\
+          \ A search by a record identifier\r\n* [Goal](goal.html): External Ids for\
+          \ this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the\
+          \ Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html):\
+          \ Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html):\
+          \ Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html):\
+          \ Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html):\
+          \ Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html):\
+          \ Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html):\
+          \ Return nutrition orders with this external identifier\r\n* [Observation](observation.html):\
+          \ The unique id for a particular observation\r\n* [Procedure](procedure.html):\
+          \ A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html):\
+          \ Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html):\
+          \ Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html):\
+          \ External identifier\r\n* [SupplyRequest](supplyrequest.html): Business\
+          \ Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html):\
+          \ Return prescriptions with this external identifier"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
       - name: subject
         in: query
         description: Search by subject
@@ -243,6 +228,20 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: reference
+      - name: location
+        in: query
+        description: Where the procedure happened
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: reason-code
+        in: query
+        description: Coded reason procedure performed
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
       - $ref: '#/components/parameters/_lastUpdatedParam'
       - $ref: '#/components/parameters/_securityParam'
       - $ref: '#/components/parameters/_tagParam'
@@ -258,12 +257,24 @@ paths:
                 $ref: '#/components/schemas/Bundle'
       security:
       - default: []
-      x-auth-type: Application & Application User
+    post:
+      tags:
+      - POST
+      - Procedure
+      summary: create Procedure
+      description: This operation is used to create a Procedure
+      responses:
+        "201":
+          description: create Procedure operation successful
+      security:
+      - default: []
   /{id}:
     get:
       tags:
       - GET
       - Procedure
+      summary: read Procedure
+      description: This operation is used to read a Procedure
       parameters:
       - name: id
         in: path
@@ -280,11 +291,12 @@ paths:
                 $ref: '#/components/schemas/Procedure'
       security:
       - default: []
-      x-auth-type: Application & Application User
     put:
       tags:
       - PUT
       - Procedure
+      summary: update Procedure
+      description: This operation is used to update a Procedure
       parameters:
       - name: id
         in: path
@@ -293,15 +305,16 @@ paths:
         schema:
           type: string
       responses:
-        "200":
+        "201":
           description: update Procedure operation successful
       security:
       - default: []
-      x-auth-type: Application & Application User
     delete:
       tags:
       - DELETE
       - Procedure
+      summary: delete Procedure
+      description: This operation is used to delete a Procedure
       parameters:
       - name: id
         in: path
@@ -314,17 +327,6 @@ paths:
           description: delete Procedure operation successful
       security:
       - default: []
-      x-auth-type: Application & Application User
-    patch:
-      tags:
-      - PATCH
-      - Procedure
-      responses:
-        "200":
-          description: patch Procedure operation successful
-      security:
-      - default: []
-      x-auth-type: Application & Application User
 components:
   schemas:
     Resource:
@@ -1974,341 +1976,137 @@ components:
             $ref: '#/components/schemas/UsageContext'
           valueMeta:
             $ref: '#/components/schemas/Meta'
-    Organization:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          endpoint:
-            $ref: '#/components/schemas/Reference'
-    CarePlan:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    ImagingStudy:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          title:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The description of the instance.
-    ServiceRequest:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          relevantHistory:
-            $ref: '#/components/schemas/Reference'
-    Patient:
-      required:
-      - type
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          type:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The type of link between this patient resource and another
-              patient resource.
-    Condition:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    Observation:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties: {}
-    AllergyIntolerance:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
     Procedure:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          usedCode:
-            $ref: '#/components/schemas/CodeableConcept'
-    MedicationRequest:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          endpoint:
-            $ref: '#/components/schemas/Reference'
-    Task:
       required:
-      - valueAddress
-      - valueAge
-      - valueAnnotation
-      - valueAttachment
-      - valueBase64binary
-      - valueBoolean
-      - valueCanonical
-      - valueCode
-      - valueCodeableconcept
-      - valueCoding
-      - valueContactdetail
-      - valueContactpoint
-      - valueContributor
-      - valueCount
-      - valueDatarequirement
-      - valueDate
-      - valueDatetime
-      - valueDecimal
-      - valueDistance
-      - valueDosage
-      - valueDuration
-      - valueExpression
-      - valueHumanname
-      - valueId
-      - valueIdentifier
-      - valueInstant
-      - valueInteger
-      - valueMarkdown
-      - valueMeta
-      - valueMoney
-      - valueOid
-      - valueParameterdefinition
-      - valuePeriod
-      - valuePositiveint
-      - valueQuantity
-      - valueRange
-      - valueRatio
-      - valueReference
-      - valueRelatedartifact
-      - valueSampleddata
-      - valueSignature
-      - valueString
-      - valueTime
-      - valueTiming
-      - valueTriggerdefinition
-      - valueUnsignedint
-      - valueUri
-      - valueUrl
-      - valueUsagecontext
-      - valueUuid
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          valueTime:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueMoney:
-            $ref: '#/components/schemas/Money'
-          valueSignature:
-            $ref: '#/components/schemas/Signature'
-          valueDatetime:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueContactdetail:
-            $ref: '#/components/schemas/ContactDetail'
-          valueHumanname:
-            $ref: '#/components/schemas/HumanName'
-          valueUuid:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueRatio:
-            $ref: '#/components/schemas/Ratio'
-          valueContactpoint:
-            $ref: '#/components/schemas/ContactPoint'
-          valueRelatedartifact:
-            $ref: '#/components/schemas/RelatedArtifact'
-          valueInteger:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueQuantity:
-            $ref: '#/components/schemas/Quantity'
-          valueCanonical:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCount:
-            $ref: '#/components/schemas/Count'
-          valueId:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDatarequirement:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valuePositiveint:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCode:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueUsagecontext:
-            $ref: '#/components/schemas/UsageContext'
-          valueAddress:
-            $ref: '#/components/schemas/Address'
-          valuePeriod:
-            $ref: '#/components/schemas/Period'
-          valueTiming:
-            $ref: '#/components/schemas/Timing'
-          valueInstant:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueUnsignedint:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAge:
-            $ref: '#/components/schemas/Age'
-          valueBase64binary:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDosage:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueBoolean:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCoding:
-            $ref: '#/components/schemas/Coding'
-          valueIdentifier:
-            $ref: '#/components/schemas/Identifier'
-          valueExpression:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueReference:
-            $ref: '#/components/schemas/Reference'
-          valueRange:
-            $ref: '#/components/schemas/Range'
-          valueSampleddata:
-            $ref: '#/components/schemas/SampledData'
-          valueUri:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDistance:
-            $ref: '#/components/schemas/Distance'
-          valueUrl:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueMeta:
-            $ref: '#/components/schemas/Meta'
-          valueMarkdown:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAttachment:
-            $ref: '#/components/schemas/Attachment'
-          valueDecimal:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueParameterdefinition:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDate:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueOid:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueContributor:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueString:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCodeableconcept:
-            $ref: '#/components/schemas/CodeableConcept'
-          valueDuration:
-            $ref: '#/components/schemas/Duration'
-          valueTriggerdefinition:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAnnotation:
-            $ref: '#/components/schemas/Annotation'
-    Practitioner:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          communication:
-            $ref: '#/components/schemas/CodeableConcept'
-    MedicationAdministration:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    Encounter:
+      - actor
+      - manipulated
+      - status
+      - subject
       allOf:
       - $ref: '#/components/schemas/DomainResource'
       - type: object
         properties:
           partOf:
             $ref: '#/components/schemas/Reference'
-    Composition:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties: {}
-    MedicationDispense:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
+          note:
+            $ref: '#/components/schemas/Annotation'
+          extension:
+            $ref: '#/components/schemas/Extension'
+          complication:
+            $ref: '#/components/schemas/CodeableConcept'
+          code:
+            $ref: '#/components/schemas/CodeableConcept'
+          subject:
             $ref: '#/components/schemas/Reference'
-    RiskAssessment:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    Communication:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
+          modifierExtension:
+            $ref: '#/components/schemas/Extension'
+          onBehalfOf:
+            $ref: '#/components/schemas/Reference'
+          reasonReference:
+            $ref: '#/components/schemas/Reference'
+          language:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: The base language in which the resource is written.
+          performedRange:
+            $ref: '#/components/schemas/Range'
+          performedAge:
+            $ref: '#/components/schemas/Age'
+          instantiatesUri:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The URL pointing to an externally maintained protocol, guideline,\
+              \ order set or other definition that is adhered to in whole or in part\
+              \ by this Procedure."
+          performedPeriod:
+            $ref: '#/components/schemas/Period'
+          performedString:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "Estimated or actual date, date-time, period, or age when\
+              \ the procedure was performed.  Allows a period to support complex procedures\
+              \ that span more than one date, and also allows for the length of the\
+              \ procedure to be captured."
+          followUp:
+            $ref: '#/components/schemas/CodeableConcept'
+          statusReason:
+            $ref: '#/components/schemas/CodeableConcept'
+          function:
+            $ref: '#/components/schemas/CodeableConcept'
+          action:
+            $ref: '#/components/schemas/CodeableConcept'
+          usedCode:
+            $ref: '#/components/schemas/CodeableConcept'
+          id:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: Unique id for the element within a resource (for internal
+              references). This may be any string value that does not contain spaces.
+          text:
+            $ref: '#/components/schemas/Narrative'
+          reasonCode:
+            $ref: '#/components/schemas/CodeableConcept'
+          manipulated:
+            $ref: '#/components/schemas/Reference'
+          basedOn:
+            $ref: '#/components/schemas/Reference'
+          outcome:
+            $ref: '#/components/schemas/CodeableConcept'
+          identifier:
+            $ref: '#/components/schemas/Identifier'
+          recorder:
+            $ref: '#/components/schemas/Reference'
+          performer:
+            $ref: '#/components/schemas/BackboneElement'
+          complicationDetail:
+            $ref: '#/components/schemas/Reference'
+          usedReference:
+            $ref: '#/components/schemas/Reference'
+          focalDevice:
+            $ref: '#/components/schemas/BackboneElement'
+          encounter:
+            $ref: '#/components/schemas/Reference'
+          instantiatesCanonical:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The URL pointing to a FHIR-defined protocol, guideline,\
+              \ order set or other definition that is adhered to in whole or in part\
+              \ by this Procedure."
+          performedDatetime:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "Estimated or actual date, date-time, period, or age when\
+              \ the procedure was performed.  Allows a period to support complex procedures\
+              \ that span more than one date, and also allows for the length of the\
+              \ procedure to be captured."
+          actor:
+            $ref: '#/components/schemas/Reference'
+          contained:
+            $ref: '#/components/schemas/Resource'
+          bodySite:
+            $ref: '#/components/schemas/CodeableConcept'
+          asserter:
+            $ref: '#/components/schemas/Reference'
+          meta:
+            $ref: '#/components/schemas/Meta'
+          report:
+            $ref: '#/components/schemas/Reference'
+          implicitRules:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "A reference to a set of rules that were followed when the\
+              \ resource was constructed, and which must be understood when processing\
+              \ the content. Often, this is a reference to an implementation guide\
+              \ that defines the special rules along with other profiles etc."
+          location:
+            $ref: '#/components/schemas/Reference'
+          category:
+            $ref: '#/components/schemas/CodeableConcept'
+          status:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "A code specifying the state of the procedure. Generally,\
+              \ this will be the in-progress or completed state."
   parameters:
     _lastUpdatedParam:
       name: _lastUpdated
@@ -2373,4 +2171,4 @@ components:
           scopes: {}
 x-wso2-oh-fhir-resourceType: Procedure
 x-wso2-oh-fhir-profile:
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/procedure
+- http://hl7.org/fhir/StructureDefinition/Procedure
