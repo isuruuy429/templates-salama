@@ -1,29 +1,18 @@
 openapi: 3.0.1
 info:
-  title: Observation
+  title: ObservationAPI
   description: "A simplified version of the HL7 FHIR API for Observation resource.\n\
-    Supported Profiles: \nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/risk-behaviour-tobacco-smoker\n\
-    http://openhie.org/fhir/sri-lanka/StructureDefinition/fasting-blood-sugar\nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/generic-observation\n\
-    http://openhie.org/fhir/sri-lanka/StructureDefinition/blood-pressure\nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/height\n\
-    http://openhie.org/fhir/sri-lanka/StructureDefinition/total-cholesterol\nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/bmi\n\
-    http://openhie.org/fhir/sri-lanka/StructureDefinition/risk-behaviour-physical-activity\n\
-    http://openhie.org/fhir/sri-lanka/StructureDefinition/weight\nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/random-blood-sugar\n"
+    Supported Profiles: \nhttp://hl7.org/fhir/StructureDefinition/Observation\n"
   contact:
     name: API Support
-    url: https://wso2.com/contact/`
-    email: user@email.com
+    url: https://wso2.com/contact/
+    email: info@wso2.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 tags:
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/risk-behaviour-tobacco-smoker
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/fasting-blood-sugar
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/generic-observation
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/blood-pressure
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/height
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/total-cholesterol
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/bmi
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/risk-behaviour-physical-activity
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/weight
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/random-blood-sugar
+- name: international
 - name: Observation
 - name: 4.0.1
 paths:
@@ -32,13 +21,24 @@ paths:
       tags:
       - GET
       - Observation
+      summary: search Observation
+      description: This operation is used to search a Observation
       parameters:
-      - name: id
-        in: path
-        description: logical identifier
-        required: true
+      - name: combo-data-absent-reason
+        in: query
+        description: "The reason why the expected value in the element Observation.value[x]\
+          \ or Observation.component.value[x] is missing."
+        required: false
         schema:
           type: string
+        x-wso2-oh-fhirType: token
+      - name: component-code-value-quantity
+        in: query
+        description: Component code and component quantity value parameter pair
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: composite
       - name: code
         in: query
         description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
@@ -61,6 +61,120 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
+      - name: encounter
+        in: query
+        description: "Multiple Resources: \r\n\r\n* [Composition](composition.html):\
+          \ Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter\
+          \ during which request was created\r\n* [DiagnosticReport](diagnosticreport.html):\
+          \ The Encounter when the order was made\r\n* [DocumentReference](documentreference.html):\
+          \ Context of the document  content\r\n* [Flag](flag.html): Alert relevant\
+          \ during encounter\r\n* [List](list.html): Context in which list created\r\
+          \n* [NutritionOrder](nutritionorder.html): Return nutrition orders with\
+          \ this encounter identifier\r\n* [Observation](observation.html): Encounter\
+          \ related to the observation\r\n* [Procedure](procedure.html): Encounter\
+          \ created as part of\r\n* [RiskAssessment](riskassessment.html): Where was\
+          \ assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter\
+          \ in which this request is made\r\n* [VisionPrescription](visionprescription.html):\
+          \ Return prescriptions with this encounter identifier"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: component-code-value-concept
+        in: query
+        description: Component code and component coded value parameter pair
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: composite
+      - name: value-quantity
+        in: query
+        description: "The value of the observation, if the value is a Quantity, or\
+          \ a SampledData (just search on the bounds of the values in sampled data)"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: quantity
+      - name: value-string
+        in: query
+        description: "The value of the observation, if the value is a string, and\
+          \ also searches in CodeableConcept.text"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: string
+      - name: part-of
+        in: query
+        description: Part of referenced event
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: combo-value-concept
+        in: query
+        description: "The value or component value of the observation, if the value\
+          \ is a CodeableConcept"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: specimen
+        in: query
+        description: Specimen used for this observation
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: status
+        in: query
+        description: The status of the observation
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: derived-from
+        in: query
+        description: Related measurements the observation is made from
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: has-member
+        in: query
+        description: Related resource that belongs to the Observation group
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: code-value-concept
+        in: query
+        description: Code and coded value parameter pair
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: composite
+      - name: combo-code-value-quantity
+        in: query
+        description: "Code and quantity value parameter pair, including in components"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: composite
+      - name: component-value-concept
+        in: query
+        description: "The value of the component observation, if the value is a CodeableConcept"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: focus
+        in: query
+        description: The focus of an observation when the focus is not the patient
+          of record.
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
       - name: date
         in: query
         description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
@@ -85,38 +199,25 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: date
-      - name: identifier
+      - name: component-data-absent-reason
         in: query
-        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
-          \ External ids for this item\r\n* [CarePlan](careplan.html): External Ids\
-          \ for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\
-          \n* [Composition](composition.html): Version-independent identifier for\
-          \ the Composition\r\n* [Condition](condition.html): A unique identifier\
-          \ of the condition record\r\n* [Consent](consent.html): Identifier for this\
-          \ record (external references)\r\n* [DetectedIssue](detectedissue.html):\
-          \ Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html):\
-          \ Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html):\
-          \ An identifier for the report\r\n* [DocumentManifest](documentmanifest.html):\
-          \ Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html):\
-          \ Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s)\
-          \ by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html):\
-          \ Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html):\
-          \ A search by a record identifier\r\n* [Goal](goal.html): External Ids for\
-          \ this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the\
-          \ Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html):\
-          \ Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html):\
-          \ Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html):\
-          \ Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html):\
-          \ Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html):\
-          \ Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html):\
-          \ Return nutrition orders with this external identifier\r\n* [Observation](observation.html):\
-          \ The unique id for a particular observation\r\n* [Procedure](procedure.html):\
-          \ A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html):\
-          \ Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html):\
-          \ Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html):\
-          \ External identifier\r\n* [SupplyRequest](supplyrequest.html): Business\
-          \ Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html):\
-          \ Return prescriptions with this external identifier"
+        description: "The reason why the expected value in the element Observation.component.value[x]\
+          \ is missing."
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: performer
+        in: query
+        description: Who performed the observation
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: reference
+      - name: data-absent-reason
+        in: query
+        description: "The reason why the expected value in the element Observation.value[x]\
+          \ is missing."
         required: false
         schema:
           type: string
@@ -160,25 +261,42 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: reference
-      - name: encounter
+      - name: component-value-quantity
         in: query
-        description: "Multiple Resources: \r\n\r\n* [Composition](composition.html):\
-          \ Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter\
-          \ during which request was created\r\n* [DiagnosticReport](diagnosticreport.html):\
-          \ The Encounter when the order was made\r\n* [DocumentReference](documentreference.html):\
-          \ Context of the document  content\r\n* [Flag](flag.html): Alert relevant\
-          \ during encounter\r\n* [List](list.html): Context in which list created\r\
-          \n* [NutritionOrder](nutritionorder.html): Return nutrition orders with\
-          \ this encounter identifier\r\n* [Observation](observation.html): Encounter\
-          \ related to the observation\r\n* [Procedure](procedure.html): Encounter\
-          \ created as part of\r\n* [RiskAssessment](riskassessment.html): Where was\
-          \ assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter\
-          \ in which this request is made\r\n* [VisionPrescription](visionprescription.html):\
-          \ Return prescriptions with this encounter identifier"
+        description: "The value of the component observation, if the value is a Quantity,\
+          \ or a SampledData (just search on the bounds of the values in sampled data)"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: quantity
+      - name: value-concept
+        in: query
+        description: "The value of the observation, if the value is a CodeableConcept"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: subject
+        in: query
+        description: The subject that the observation is about
         required: false
         schema:
           type: string
         x-wso2-oh-fhirType: reference
+      - name: combo-code-value-concept
+        in: query
+        description: "Code and coded value parameter pair, including in components"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: composite
+      - name: component-code
+        in: query
+        description: The component code of the observation type
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
       - name: based-on
         in: query
         description: Reference to the service request.
@@ -193,154 +311,13 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
-      - name: combo-code
+      - name: code-value-date
         in: query
-        description: The code of the observation type or component type
+        description: Code and date/time value parameter pair
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: token
-      - name: combo-data-absent-reason
-        in: query
-        description: "The reason why the expected value in the element Observation.value[x]\
-          \ or Observation.component.value[x] is missing."
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: combo-value-concept
-        in: query
-        description: "The value or component value of the observation, if the value\
-          \ is a CodeableConcept"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: combo-value-quantity
-        in: query
-        description: "The value or component value of the observation, if the value\
-          \ is a Quantity, or a SampledData (just search on the bounds of the values\
-          \ in sampled data)"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: quantity
-      - name: component-code
-        in: query
-        description: The component code of the observation type
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: component-data-absent-reason
-        in: query
-        description: "The reason why the expected value in the element Observation.component.value[x]\
-          \ is missing."
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: component-value-concept
-        in: query
-        description: "The value of the component observation, if the value is a CodeableConcept"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: component-value-quantity
-        in: query
-        description: "The value of the component observation, if the value is a Quantity,\
-          \ or a SampledData (just search on the bounds of the values in sampled data)"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: quantity
-      - name: data-absent-reason
-        in: query
-        description: "The reason why the expected value in the element Observation.value[x]\
-          \ is missing."
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: derived-from
-        in: query
-        description: Related measurements the observation is made from
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: device
-        in: query
-        description: The Device that generated the observation data.
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: focus
-        in: query
-        description: The focus of an observation when the focus is not the patient
-          of record.
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: has-member
-        in: query
-        description: Related resource that belongs to the Observation group
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: method
-        in: query
-        description: The method used for the observation
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: part-of
-        in: query
-        description: Part of referenced event
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: performer
-        in: query
-        description: Who performed the observation
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: specimen
-        in: query
-        description: Specimen used for this observation
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: status
-        in: query
-        description: The status of the observation
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: subject
-        in: query
-        description: The subject that the observation is about
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: value-concept
-        in: query
-        description: "The value of the observation, if the value is a CodeableConcept"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
+        x-wso2-oh-fhirType: composite
       - name: value-date
         in: query
         description: "The value of the observation, if the value is a date or period\
@@ -349,36 +326,13 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: date
-      - name: value-quantity
+      - name: combo-code
         in: query
-        description: "The value of the observation, if the value is a Quantity, or\
-          \ a SampledData (just search on the bounds of the values in sampled data)"
+        description: The code of the observation type or component type
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: quantity
-      - name: value-string
-        in: query
-        description: "The value of the observation, if the value is a string, and\
-          \ also searches in CodeableConcept.text"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: string
-      - name: code-value-concept
-        in: query
-        description: Code and coded value parameter pair
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: composite
-      - name: code-value-date
-        in: query
-        description: Code and date/time value parameter pair
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: composite
+        x-wso2-oh-fhirType: token
       - name: code-value-quantity
         in: query
         description: Code and quantity value parameter pair
@@ -393,34 +347,65 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: composite
-      - name: combo-code-value-concept
+      - name: identifier
         in: query
-        description: "Code and coded value parameter pair, including in components"
+        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
+          \ External ids for this item\r\n* [CarePlan](careplan.html): External Ids\
+          \ for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\
+          \n* [Composition](composition.html): Version-independent identifier for\
+          \ the Composition\r\n* [Condition](condition.html): A unique identifier\
+          \ of the condition record\r\n* [Consent](consent.html): Identifier for this\
+          \ record (external references)\r\n* [DetectedIssue](detectedissue.html):\
+          \ Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html):\
+          \ Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html):\
+          \ An identifier for the report\r\n* [DocumentManifest](documentmanifest.html):\
+          \ Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html):\
+          \ Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s)\
+          \ by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html):\
+          \ Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html):\
+          \ A search by a record identifier\r\n* [Goal](goal.html): External Ids for\
+          \ this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the\
+          \ Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html):\
+          \ Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html):\
+          \ Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html):\
+          \ Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html):\
+          \ Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html):\
+          \ Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html):\
+          \ Return nutrition orders with this external identifier\r\n* [Observation](observation.html):\
+          \ The unique id for a particular observation\r\n* [Procedure](procedure.html):\
+          \ A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html):\
+          \ Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html):\
+          \ Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html):\
+          \ External identifier\r\n* [SupplyRequest](supplyrequest.html): Business\
+          \ Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html):\
+          \ Return prescriptions with this external identifier"
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: composite
-      - name: combo-code-value-quantity
+        x-wso2-oh-fhirType: token
+      - name: combo-value-quantity
         in: query
-        description: "Code and quantity value parameter pair, including in components"
+        description: "The value or component value of the observation, if the value\
+          \ is a Quantity, or a SampledData (just search on the bounds of the values\
+          \ in sampled data)"
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: composite
-      - name: component-code-value-concept
+        x-wso2-oh-fhirType: quantity
+      - name: device
         in: query
-        description: Component code and component coded value parameter pair
+        description: The Device that generated the observation data.
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: composite
-      - name: component-code-value-quantity
+        x-wso2-oh-fhirType: reference
+      - name: method
         in: query
-        description: Component code and component quantity value parameter pair
+        description: The method used for the observation
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: composite
+        x-wso2-oh-fhirType: token
       - $ref: '#/components/parameters/_lastUpdatedParam'
       - $ref: '#/components/parameters/_securityParam'
       - $ref: '#/components/parameters/_tagParam'
@@ -436,12 +421,24 @@ paths:
                 $ref: '#/components/schemas/Bundle'
       security:
       - default: []
-      x-auth-type: Application & Application User
+    post:
+      tags:
+      - POST
+      - Observation
+      summary: create Observation
+      description: This operation is used to create a Observation
+      responses:
+        "201":
+          description: create Observation operation successful
+      security:
+      - default: []
   /{id}:
     get:
       tags:
       - GET
       - Observation
+      summary: read Observation
+      description: This operation is used to read a Observation
       parameters:
       - name: id
         in: path
@@ -458,11 +455,12 @@ paths:
                 $ref: '#/components/schemas/Observation'
       security:
       - default: []
-      x-auth-type: Application & Application User
     put:
       tags:
       - PUT
       - Observation
+      summary: update Observation
+      description: This operation is used to update a Observation
       parameters:
       - name: id
         in: path
@@ -471,15 +469,16 @@ paths:
         schema:
           type: string
       responses:
-        "200":
+        "201":
           description: update Observation operation successful
       security:
       - default: []
-      x-auth-type: Application & Application User
     delete:
       tags:
       - DELETE
       - Observation
+      summary: delete Observation
+      description: This operation is used to delete a Observation
       parameters:
       - name: id
         in: path
@@ -492,17 +491,6 @@ paths:
           description: delete Observation operation successful
       security:
       - default: []
-      x-auth-type: Application & Application User
-    patch:
-      tags:
-      - PATCH
-      - Observation
-      responses:
-        "200":
-          description: patch Observation operation successful
-      security:
-      - default: []
-      x-auth-type: Application & Application User
 components:
   schemas:
     Resource:
@@ -2152,341 +2140,164 @@ components:
             $ref: '#/components/schemas/UsageContext'
           valueMeta:
             $ref: '#/components/schemas/Meta'
-    Organization:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          endpoint:
-            $ref: '#/components/schemas/Reference'
-    CarePlan:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    ImagingStudy:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          title:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The description of the instance.
-    ServiceRequest:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          relevantHistory:
-            $ref: '#/components/schemas/Reference'
-    Patient:
-      required:
-      - type
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          type:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The type of link between this patient resource and another
-              patient resource.
-    Condition:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
     Observation:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties: {}
-    AllergyIntolerance:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    Procedure:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          usedCode:
-            $ref: '#/components/schemas/CodeableConcept'
-    MedicationRequest:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          endpoint:
-            $ref: '#/components/schemas/Reference'
-    Task:
       required:
-      - valueAddress
-      - valueAge
-      - valueAnnotation
-      - valueAttachment
-      - valueBase64binary
-      - valueBoolean
-      - valueCanonical
-      - valueCode
-      - valueCodeableconcept
-      - valueCoding
-      - valueContactdetail
-      - valueContactpoint
-      - valueContributor
-      - valueCount
-      - valueDatarequirement
-      - valueDate
-      - valueDatetime
-      - valueDecimal
-      - valueDistance
-      - valueDosage
-      - valueDuration
-      - valueExpression
-      - valueHumanname
-      - valueId
-      - valueIdentifier
-      - valueInstant
-      - valueInteger
-      - valueMarkdown
-      - valueMeta
-      - valueMoney
-      - valueOid
-      - valueParameterdefinition
-      - valuePeriod
-      - valuePositiveint
-      - valueQuantity
-      - valueRange
-      - valueRatio
-      - valueReference
-      - valueRelatedartifact
-      - valueSampleddata
-      - valueSignature
-      - valueString
-      - valueTime
-      - valueTiming
-      - valueTriggerdefinition
-      - valueUnsignedint
-      - valueUri
-      - valueUrl
-      - valueUsagecontext
-      - valueUuid
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          valueTime:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueMoney:
-            $ref: '#/components/schemas/Money'
-          valueSignature:
-            $ref: '#/components/schemas/Signature'
-          valueDatetime:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueContactdetail:
-            $ref: '#/components/schemas/ContactDetail'
-          valueHumanname:
-            $ref: '#/components/schemas/HumanName'
-          valueUuid:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueRatio:
-            $ref: '#/components/schemas/Ratio'
-          valueContactpoint:
-            $ref: '#/components/schemas/ContactPoint'
-          valueRelatedartifact:
-            $ref: '#/components/schemas/RelatedArtifact'
-          valueInteger:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueQuantity:
-            $ref: '#/components/schemas/Quantity'
-          valueCanonical:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCount:
-            $ref: '#/components/schemas/Count'
-          valueId:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDatarequirement:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valuePositiveint:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCode:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueUsagecontext:
-            $ref: '#/components/schemas/UsageContext'
-          valueAddress:
-            $ref: '#/components/schemas/Address'
-          valuePeriod:
-            $ref: '#/components/schemas/Period'
-          valueTiming:
-            $ref: '#/components/schemas/Timing'
-          valueInstant:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueUnsignedint:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAge:
-            $ref: '#/components/schemas/Age'
-          valueBase64binary:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDosage:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueBoolean:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCoding:
-            $ref: '#/components/schemas/Coding'
-          valueIdentifier:
-            $ref: '#/components/schemas/Identifier'
-          valueExpression:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueReference:
-            $ref: '#/components/schemas/Reference'
-          valueRange:
-            $ref: '#/components/schemas/Range'
-          valueSampleddata:
-            $ref: '#/components/schemas/SampledData'
-          valueUri:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDistance:
-            $ref: '#/components/schemas/Distance'
-          valueUrl:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueMeta:
-            $ref: '#/components/schemas/Meta'
-          valueMarkdown:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAttachment:
-            $ref: '#/components/schemas/Attachment'
-          valueDecimal:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueParameterdefinition:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDate:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueOid:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueContributor:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueString:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCodeableconcept:
-            $ref: '#/components/schemas/CodeableConcept'
-          valueDuration:
-            $ref: '#/components/schemas/Duration'
-          valueTriggerdefinition:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAnnotation:
-            $ref: '#/components/schemas/Annotation'
-    Practitioner:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          communication:
-            $ref: '#/components/schemas/CodeableConcept'
-    MedicationAdministration:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    Encounter:
+      - code
+      - status
       allOf:
       - $ref: '#/components/schemas/DomainResource'
       - type: object
         properties:
           partOf:
             $ref: '#/components/schemas/Reference'
-    Composition:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties: {}
-    MedicationDispense:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
+          dataAbsentReason:
+            $ref: '#/components/schemas/CodeableConcept'
+          valueTime:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The information determined as a result of making the observation,\
+              \ if the information has a simple value."
+          subject:
             $ref: '#/components/schemas/Reference'
-    RiskAssessment:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
+          modifierExtension:
+            $ref: '#/components/schemas/Extension'
+          valueDatetime:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The information determined as a result of making the observation,\
+              \ if the information has a simple value."
+          focus:
+            $ref: '#/components/schemas/Reference'
+          language:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: The base language in which the resource is written.
+          type:
+            $ref: '#/components/schemas/CodeableConcept'
+          valueRatio:
+            $ref: '#/components/schemas/Ratio'
+          high:
+            $ref: '#/components/schemas/Quantity'
+          id:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: Unique id for the element within a resource (for internal
+              references). This may be any string value that does not contain spaces.
+          text:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: Text based reference range in an observation which may be
+              used when a quantitative range is not appropriate for an observation.  An
+              example would be a reference value of "Negative" or a list or table
+              of "normals".
+          issued:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The date and time this version of the observation was made\
+              \ available to providers, typically after the results have been reviewed\
+              \ and verified."
+          valueInteger:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The information determined as a result of making the observation,\
+              \ if the information has a simple value."
+          valueQuantity:
+            $ref: '#/components/schemas/Quantity'
+          identifier:
+            $ref: '#/components/schemas/Identifier'
+          effectivePeriod:
+            $ref: '#/components/schemas/Period'
+          effectiveTiming:
+            $ref: '#/components/schemas/Timing'
+          method:
+            $ref: '#/components/schemas/CodeableConcept'
+          referenceRange:
+            $ref: '#/components/schemas/BackboneElement'
+          interpretation:
+            $ref: '#/components/schemas/CodeableConcept'
+          meta:
+            $ref: '#/components/schemas/Meta'
+          valuePeriod:
+            $ref: '#/components/schemas/Period'
+          implicitRules:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "A reference to a set of rules that were followed when the\
+              \ resource was constructed, and which must be understood when processing\
+              \ the content. Often, this is a reference to an implementation guide\
+              \ that defines the special rules along with other profiles etc."
+          device:
+            $ref: '#/components/schemas/Reference'
+          status:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: The status of the result value.
+          valueBoolean:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The information determined as a result of making the observation,\
+              \ if the information has a simple value."
           note:
             $ref: '#/components/schemas/Annotation'
-    Communication:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
+          extension:
+            $ref: '#/components/schemas/Extension'
+          code:
+            $ref: '#/components/schemas/CodeableConcept'
+          valueRange:
+            $ref: '#/components/schemas/Range'
+          valueSampleddata:
+            $ref: '#/components/schemas/SampledData'
+          appliesTo:
+            $ref: '#/components/schemas/CodeableConcept'
+          low:
+            $ref: '#/components/schemas/Quantity'
+          specimen:
+            $ref: '#/components/schemas/Reference'
+          derivedFrom:
+            $ref: '#/components/schemas/Reference'
+          basedOn:
+            $ref: '#/components/schemas/Reference'
+          performer:
+            $ref: '#/components/schemas/Reference'
+          effectiveDatetime:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The time or time-period the observed value is asserted as\
+              \ being true. For biological subjects - e.g. human patients - this is\
+              \ usually called the \"physiologically relevant time\". This is usually\
+              \ either the time of the procedure or of specimen collection, but very\
+              \ often the source of the date/time is not known, only the date/time\
+              \ itself."
+          hasMember:
+            $ref: '#/components/schemas/Reference'
+          encounter:
+            $ref: '#/components/schemas/Reference'
+          contained:
+            $ref: '#/components/schemas/Resource'
+          bodySite:
+            $ref: '#/components/schemas/CodeableConcept'
+          component:
+            $ref: '#/components/schemas/BackboneElement'
+          valueString:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The information determined as a result of making the observation,\
+              \ if the information has a simple value."
+          valueCodeableconcept:
+            $ref: '#/components/schemas/CodeableConcept'
+          category:
+            $ref: '#/components/schemas/CodeableConcept'
+          effectiveInstant:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The time or time-period the observed value is asserted as\
+              \ being true. For biological subjects - e.g. human patients - this is\
+              \ usually called the \"physiologically relevant time\". This is usually\
+              \ either the time of the procedure or of specimen collection, but very\
+              \ often the source of the date/time is not known, only the date/time\
+              \ itself."
+          age:
+            $ref: '#/components/schemas/Range'
   parameters:
     _lastUpdatedParam:
       name: _lastUpdated
@@ -2551,13 +2362,4 @@ components:
           scopes: {}
 x-wso2-oh-fhir-resourceType: Observation
 x-wso2-oh-fhir-profile:
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/risk-behaviour-tobacco-smoker
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/fasting-blood-sugar
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/generic-observation
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/blood-pressure
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/height
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/total-cholesterol
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/bmi
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/risk-behaviour-physical-activity
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/weight
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/random-blood-sugar
+- http://hl7.org/fhir/StructureDefinition/Observation
