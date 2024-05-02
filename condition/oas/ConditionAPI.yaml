@@ -1,15 +1,18 @@
 openapi: 3.0.1
 info:
-  title: Condition
+  title: ConditionAPI
   description: "A simplified version of the HL7 FHIR API for Condition resource.\n\
-    Supported Profiles: \nhttp://openhie.org/fhir/sri-lanka/StructureDefinition/medical-history\n"
+    Supported Profiles: \nhttp://hl7.org/fhir/StructureDefinition/Condition\n"
   contact:
     name: API Support
-    url: https://wso2.com/contact/`
-    email: user@email.com
+    url: https://wso2.com/contact/
+    email: info@wso2.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 tags:
-- name: http://openhie.org/fhir/sri-lanka/StructureDefinition/medical-history
+- name: international
 - name: Condition
 - name: 4.0.1
 paths:
@@ -18,13 +21,9 @@ paths:
       tags:
       - GET
       - Condition
+      summary: search Condition
+      description: This operation is used to search a Condition
       parameters:
-      - name: id
-        in: path
-        description: logical identifier
-        required: true
-        schema:
-          type: string
       - name: code
         in: query
         description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
@@ -47,42 +46,27 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
-      - name: identifier
+      - name: severity
         in: query
-        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
-          \ External ids for this item\r\n* [CarePlan](careplan.html): External Ids\
-          \ for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\
-          \n* [Composition](composition.html): Version-independent identifier for\
-          \ the Composition\r\n* [Condition](condition.html): A unique identifier\
-          \ of the condition record\r\n* [Consent](consent.html): Identifier for this\
-          \ record (external references)\r\n* [DetectedIssue](detectedissue.html):\
-          \ Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html):\
-          \ Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html):\
-          \ An identifier for the report\r\n* [DocumentManifest](documentmanifest.html):\
-          \ Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html):\
-          \ Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s)\
-          \ by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html):\
-          \ Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html):\
-          \ A search by a record identifier\r\n* [Goal](goal.html): External Ids for\
-          \ this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the\
-          \ Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html):\
-          \ Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html):\
-          \ Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html):\
-          \ Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html):\
-          \ Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html):\
-          \ Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html):\
-          \ Return nutrition orders with this external identifier\r\n* [Observation](observation.html):\
-          \ The unique id for a particular observation\r\n* [Procedure](procedure.html):\
-          \ A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html):\
-          \ Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html):\
-          \ Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html):\
-          \ External identifier\r\n* [SupplyRequest](supplyrequest.html): Business\
-          \ Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html):\
-          \ Return prescriptions with this external identifier"
+        description: The severity of the condition
         required: false
         schema:
           type: string
         x-wso2-oh-fhirType: token
+      - name: body-site
+        in: query
+        description: "Anatomical location, if relevant"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: recorded-date
+        in: query
+        description: Date record was first recorded
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: date
       - name: patient
         in: query
         description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
@@ -122,20 +106,6 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: reference
-      - name: abatement-age
-        in: query
-        description: Abatement as age or age range
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: quantity
-      - name: abatement-date
-        in: query
-        description: Date-related abatements (dateTime and period)
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: date
       - name: abatement-string
         in: query
         description: Abatement as a string
@@ -143,37 +113,23 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: string
-      - name: asserter
+      - name: onset-age
         in: query
-        description: Person who asserts this condition
+        description: Onsets as age or age range
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: quantity
+      - name: encounter
+        in: query
+        description: Encounter created as part of
         required: false
         schema:
           type: string
         x-wso2-oh-fhirType: reference
-      - name: body-site
+      - name: asserter
         in: query
-        description: "Anatomical location, if relevant"
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: category
-        in: query
-        description: The category of the condition
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: clinical-status
-        in: query
-        description: The clinical status of the condition
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: token
-      - name: encounter
-        in: query
-        description: Encounter created as part of
+        description: Person who asserts this condition
         required: false
         schema:
           type: string
@@ -185,20 +141,6 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
-      - name: evidence-detail
-        in: query
-        description: Supporting information found elsewhere
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: reference
-      - name: onset-age
-        in: query
-        description: Onsets as age or age range
-        required: false
-        schema:
-          type: string
-        x-wso2-oh-fhirType: quantity
       - name: onset-date
         in: query
         description: Date related onsets (dateTime and Period)
@@ -206,23 +148,31 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: date
-      - name: onset-info
+      - name: abatement-age
         in: query
-        description: Onsets as a string
+        description: Abatement as age or age range
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: string
-      - name: recorded-date
+        x-wso2-oh-fhirType: quantity
+      - name: verification-status
         in: query
-        description: Date record was first recorded
+        description: unconfirmed | provisional | differential | confirmed | refuted
+          | entered-in-error
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: abatement-date
+        in: query
+        description: Date-related abatements (dateTime and period)
         required: false
         schema:
           type: string
         x-wso2-oh-fhirType: date
-      - name: severity
+      - name: clinical-status
         in: query
-        description: The severity of the condition
+        description: The clinical status of the condition
         required: false
         schema:
           type: string
@@ -234,6 +184,56 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: token
+      - name: category
+        in: query
+        description: The category of the condition
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
+      - name: onset-info
+        in: query
+        description: Onsets as a string
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: string
+      - name: identifier
+        in: query
+        description: "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html):\
+          \ External ids for this item\r\n* [CarePlan](careplan.html): External Ids\
+          \ for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\
+          \n* [Composition](composition.html): Version-independent identifier for\
+          \ the Composition\r\n* [Condition](condition.html): A unique identifier\
+          \ of the condition record\r\n* [Consent](consent.html): Identifier for this\
+          \ record (external references)\r\n* [DetectedIssue](detectedissue.html):\
+          \ Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html):\
+          \ Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html):\
+          \ An identifier for the report\r\n* [DocumentManifest](documentmanifest.html):\
+          \ Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html):\
+          \ Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s)\
+          \ by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html):\
+          \ Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html):\
+          \ A search by a record identifier\r\n* [Goal](goal.html): External Ids for\
+          \ this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the\
+          \ Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html):\
+          \ Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html):\
+          \ Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html):\
+          \ Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html):\
+          \ Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html):\
+          \ Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html):\
+          \ Return nutrition orders with this external identifier\r\n* [Observation](observation.html):\
+          \ The unique id for a particular observation\r\n* [Procedure](procedure.html):\
+          \ A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html):\
+          \ Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html):\
+          \ Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html):\
+          \ External identifier\r\n* [SupplyRequest](supplyrequest.html): Business\
+          \ Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html):\
+          \ Return prescriptions with this external identifier"
+        required: false
+        schema:
+          type: string
+        x-wso2-oh-fhirType: token
       - name: subject
         in: query
         description: Who has the condition?
@@ -241,14 +241,13 @@ paths:
         schema:
           type: string
         x-wso2-oh-fhirType: reference
-      - name: verification-status
+      - name: evidence-detail
         in: query
-        description: unconfirmed | provisional | differential | confirmed | refuted
-          | entered-in-error
+        description: Supporting information found elsewhere
         required: false
         schema:
           type: string
-        x-wso2-oh-fhirType: token
+        x-wso2-oh-fhirType: reference
       - $ref: '#/components/parameters/_lastUpdatedParam'
       - $ref: '#/components/parameters/_securityParam'
       - $ref: '#/components/parameters/_tagParam'
@@ -264,12 +263,24 @@ paths:
                 $ref: '#/components/schemas/Bundle'
       security:
       - default: []
-      x-auth-type: Application & Application User
+    post:
+      tags:
+      - POST
+      - Condition
+      summary: create Condition
+      description: This operation is used to create a Condition
+      responses:
+        "201":
+          description: create Condition operation successful
+      security:
+      - default: []
   /{id}:
     get:
       tags:
       - GET
       - Condition
+      summary: read Condition
+      description: This operation is used to read a Condition
       parameters:
       - name: id
         in: path
@@ -286,11 +297,12 @@ paths:
                 $ref: '#/components/schemas/Condition'
       security:
       - default: []
-      x-auth-type: Application & Application User
     put:
       tags:
       - PUT
       - Condition
+      summary: update Condition
+      description: This operation is used to update a Condition
       parameters:
       - name: id
         in: path
@@ -299,15 +311,16 @@ paths:
         schema:
           type: string
       responses:
-        "200":
+        "201":
           description: update Condition operation successful
       security:
       - default: []
-      x-auth-type: Application & Application User
     delete:
       tags:
       - DELETE
       - Condition
+      summary: delete Condition
+      description: This operation is used to delete a Condition
       parameters:
       - name: id
         in: path
@@ -320,17 +333,6 @@ paths:
           description: delete Condition operation successful
       security:
       - default: []
-      x-auth-type: Application & Application User
-    patch:
-      tags:
-      - PATCH
-      - Condition
-      responses:
-        "200":
-          description: patch Condition operation successful
-      security:
-      - default: []
-      x-auth-type: Application & Application User
 components:
   schemas:
     Resource:
@@ -1980,341 +1982,117 @@ components:
             $ref: '#/components/schemas/UsageContext'
           valueMeta:
             $ref: '#/components/schemas/Meta'
-    Organization:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          endpoint:
-            $ref: '#/components/schemas/Reference'
-    CarePlan:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    ImagingStudy:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          title:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The description of the instance.
-    ServiceRequest:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          relevantHistory:
-            $ref: '#/components/schemas/Reference'
-    Patient:
-      required:
-      - type
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          type:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The type of link between this patient resource and another
-              patient resource.
     Condition:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    Observation:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties: {}
-    AllergyIntolerance:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    Procedure:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          usedCode:
-            $ref: '#/components/schemas/CodeableConcept'
-    MedicationRequest:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          endpoint:
-            $ref: '#/components/schemas/Reference'
-    Task:
       required:
-      - valueAddress
-      - valueAge
-      - valueAnnotation
-      - valueAttachment
-      - valueBase64binary
-      - valueBoolean
-      - valueCanonical
-      - valueCode
-      - valueCodeableconcept
-      - valueCoding
-      - valueContactdetail
-      - valueContactpoint
-      - valueContributor
-      - valueCount
-      - valueDatarequirement
-      - valueDate
-      - valueDatetime
-      - valueDecimal
-      - valueDistance
-      - valueDosage
-      - valueDuration
-      - valueExpression
-      - valueHumanname
-      - valueId
-      - valueIdentifier
-      - valueInstant
-      - valueInteger
-      - valueMarkdown
-      - valueMeta
-      - valueMoney
-      - valueOid
-      - valueParameterdefinition
-      - valuePeriod
-      - valuePositiveint
-      - valueQuantity
-      - valueRange
-      - valueRatio
-      - valueReference
-      - valueRelatedartifact
-      - valueSampleddata
-      - valueSignature
-      - valueString
-      - valueTime
-      - valueTiming
-      - valueTriggerdefinition
-      - valueUnsignedint
-      - valueUri
-      - valueUrl
-      - valueUsagecontext
-      - valueUuid
+      - subject
       allOf:
       - $ref: '#/components/schemas/DomainResource'
       - type: object
         properties:
-          valueTime:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueMoney:
-            $ref: '#/components/schemas/Money'
-          valueSignature:
-            $ref: '#/components/schemas/Signature'
-          valueDatetime:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueContactdetail:
-            $ref: '#/components/schemas/ContactDetail'
-          valueHumanname:
-            $ref: '#/components/schemas/HumanName'
-          valueUuid:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueRatio:
-            $ref: '#/components/schemas/Ratio'
-          valueContactpoint:
-            $ref: '#/components/schemas/ContactPoint'
-          valueRelatedartifact:
-            $ref: '#/components/schemas/RelatedArtifact'
-          valueInteger:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueQuantity:
-            $ref: '#/components/schemas/Quantity'
-          valueCanonical:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCount:
-            $ref: '#/components/schemas/Count'
-          valueId:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDatarequirement:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valuePositiveint:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCode:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueUsagecontext:
-            $ref: '#/components/schemas/UsageContext'
-          valueAddress:
-            $ref: '#/components/schemas/Address'
-          valuePeriod:
-            $ref: '#/components/schemas/Period'
-          valueTiming:
-            $ref: '#/components/schemas/Timing'
-          valueInstant:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueUnsignedint:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAge:
-            $ref: '#/components/schemas/Age'
-          valueBase64binary:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDosage:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueBoolean:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCoding:
-            $ref: '#/components/schemas/Coding'
-          valueIdentifier:
-            $ref: '#/components/schemas/Identifier'
-          valueExpression:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueReference:
-            $ref: '#/components/schemas/Reference'
-          valueRange:
+          note:
+            $ref: '#/components/schemas/Annotation'
+          extension:
+            $ref: '#/components/schemas/Extension'
+          code:
+            $ref: '#/components/schemas/CodeableConcept'
+          evidence:
+            $ref: '#/components/schemas/BackboneElement'
+          onsetRange:
             $ref: '#/components/schemas/Range'
-          valueSampleddata:
-            $ref: '#/components/schemas/SampledData'
-          valueUri:
+          subject:
+            $ref: '#/components/schemas/Reference'
+          modifierExtension:
+            $ref: '#/components/schemas/Extension'
+          language:
             pattern: "[ \\r\\n\\t\\S]+"
             type: string
-            description: The value of the Output parameter as a basic type.
-          valueDistance:
-            $ref: '#/components/schemas/Distance'
-          valueUrl:
+            description: The base language in which the resource is written.
+          clinicalStatus:
+            $ref: '#/components/schemas/CodeableConcept'
+          type:
+            $ref: '#/components/schemas/CodeableConcept'
+          onsetString:
             pattern: "[ \\r\\n\\t\\S]+"
             type: string
-            description: The value of the Output parameter as a basic type.
-          valueMeta:
+            description: "Estimated or actual date or date-time  the condition began,\
+              \ in the opinion of the clinician."
+          onsetAge:
+            $ref: '#/components/schemas/Age'
+          assessment:
+            $ref: '#/components/schemas/Reference'
+          abatementPeriod:
+            $ref: '#/components/schemas/Period'
+          id:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: Unique id for the element within a resource (for internal
+              references). This may be any string value that does not contain spaces.
+          text:
+            $ref: '#/components/schemas/Narrative'
+          abatementString:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The date or estimated date that the condition resolved or\
+              \ went into remission. This is called \"abatement\" because of the many\
+              \ overloaded connotations associated with \"remission\" or \"resolution\"\
+              \ - Conditions are never really resolved, but they can abate."
+          onsetDatetime:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "Estimated or actual date or date-time  the condition began,\
+              \ in the opinion of the clinician."
+          severity:
+            $ref: '#/components/schemas/CodeableConcept'
+          summary:
+            $ref: '#/components/schemas/CodeableConcept'
+          identifier:
+            $ref: '#/components/schemas/Identifier'
+          recorder:
+            $ref: '#/components/schemas/Reference'
+          onsetPeriod:
+            $ref: '#/components/schemas/Period'
+          verificationStatus:
+            $ref: '#/components/schemas/CodeableConcept'
+          recordedDate:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The recordedDate represents when this particular Condition\
+              \ record was created in the system, which is often a system-generated\
+              \ date."
+          abatementRange:
+            $ref: '#/components/schemas/Range'
+          encounter:
+            $ref: '#/components/schemas/Reference'
+          abatementDatetime:
+            pattern: "[ \\r\\n\\t\\S]+"
+            type: string
+            description: "The date or estimated date that the condition resolved or\
+              \ went into remission. This is called \"abatement\" because of the many\
+              \ overloaded connotations associated with \"remission\" or \"resolution\"\
+              \ - Conditions are never really resolved, but they can abate."
+          contained:
+            $ref: '#/components/schemas/Resource'
+          bodySite:
+            $ref: '#/components/schemas/CodeableConcept'
+          asserter:
+            $ref: '#/components/schemas/Reference'
+          stage:
+            $ref: '#/components/schemas/BackboneElement'
+          meta:
             $ref: '#/components/schemas/Meta'
-          valueMarkdown:
+          implicitRules:
             pattern: "[ \\r\\n\\t\\S]+"
             type: string
-            description: The value of the Output parameter as a basic type.
-          valueAttachment:
-            $ref: '#/components/schemas/Attachment'
-          valueDecimal:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueParameterdefinition:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueDate:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueOid:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueContributor:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueString:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueCodeableconcept:
+            description: "A reference to a set of rules that were followed when the\
+              \ resource was constructed, and which must be understood when processing\
+              \ the content. Often, this is a reference to an implementation guide\
+              \ that defines the special rules along with other profiles etc."
+          detail:
+            $ref: '#/components/schemas/Reference'
+          category:
             $ref: '#/components/schemas/CodeableConcept'
-          valueDuration:
-            $ref: '#/components/schemas/Duration'
-          valueTriggerdefinition:
-            pattern: "[ \\r\\n\\t\\S]+"
-            type: string
-            description: The value of the Output parameter as a basic type.
-          valueAnnotation:
-            $ref: '#/components/schemas/Annotation'
-    Practitioner:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          communication:
-            $ref: '#/components/schemas/CodeableConcept'
-    MedicationAdministration:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    Encounter:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          partOf:
-            $ref: '#/components/schemas/Reference'
-    Composition:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties: {}
-    MedicationDispense:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          eventHistory:
-            $ref: '#/components/schemas/Reference'
-    RiskAssessment:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
-    Communication:
-      allOf:
-      - $ref: '#/components/schemas/DomainResource'
-      - type: object
-        properties:
-          note:
-            $ref: '#/components/schemas/Annotation'
+          abatementAge:
+            $ref: '#/components/schemas/Age'
   parameters:
     _lastUpdatedParam:
       name: _lastUpdated
@@ -2379,4 +2157,4 @@ components:
           scopes: {}
 x-wso2-oh-fhir-resourceType: Condition
 x-wso2-oh-fhir-profile:
-- http://openhie.org/fhir/sri-lanka/StructureDefinition/medical-history
+- http://hl7.org/fhir/StructureDefinition/Condition
