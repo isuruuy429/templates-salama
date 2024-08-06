@@ -28,7 +28,7 @@ public type Patient international401:Patient;
 
 # A service representing a network-accessible API
 # bound to port `9090`.
-service / on new fhirr4:Listener(9090, apiConfig) {
+service /fhir/r4/Patient on new fhirr4:Listener(9090, apiConfig) {
 
     // Read the current state of single resource based on its id.
     isolated resource function get [string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError|error {
