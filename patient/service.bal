@@ -135,8 +135,14 @@ isolated json[] data = [
                 "use": "home"
             }
         ],
-        "identifier": [],
-        "gender": "male"
+        "identifier": [
+            {
+                "system": "http://hospital.smarthealth.org/patient-ids",
+                "value": "12345"
+            }
+        ],
+        "gender": "male",
+        "birthDate": "1985-04-25"
     },
 
     {
