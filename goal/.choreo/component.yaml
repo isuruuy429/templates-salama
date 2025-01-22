@@ -1,6 +1,6 @@
 schemaVersion: "1.1"
 endpoints:
-    - name: lk-fhir-goal-api-803
+    - name: lk-fhir-goal-api-59d
       displayName: LK FHIR Goal API
       service:
         basePath: /Goal
@@ -10,3 +10,4 @@ endpoints:
         - Project
         - Public
       schemaFilePath: oas/GoalAPI.yaml
+
