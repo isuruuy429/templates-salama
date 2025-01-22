@@ -47,9 +47,9 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     // Search for resources based on a set of criteria.
     isolated resource function get .(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
-            r4:StringSearchParameter[] idParam = check fhirContext.getStringSearchParameter("_id") ?: [];
+            r4:TokenSearchParameter[] idParam = check fhirContext.getTokenSearchParameter("_id") ?: [];
             r4:StringSearchParameter[] familyParam = check fhirContext.getStringSearchParameter("family") ?: [];
-            string id = idParam != [] ? idParam[0].value : "";
+            string id = idParam != [] ? check idParam[0].code.ensureType() : "";
             string family = familyParam != [] ? check familyParam[0].value.ensureType() : "";
             r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
             r4:BundleEntry bundleEntry = {};
