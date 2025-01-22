@@ -3,7 +3,7 @@ endpoints:
     - name: lk-fhir-patient-api-803
       displayName: LK FHIR Patient API
       service:
-        basePath: /
+        basePath: /Patient
         port: 9090
       type: REST
       networkVisibilities:
