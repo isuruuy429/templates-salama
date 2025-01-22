@@ -31,7 +31,7 @@ public type Patient international401:Patient;
 service / on new fhirr4:Listener(9090, apiConfig) {
 
     // Read the current state of single resource based on its id.
-    isolated resource function get [string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError|error {
+    isolated resource function get Patient/[string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError|error {
         lock {
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
@@ -45,11 +45,11 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     }
 
     // Search for resources based on a set of criteria.
-    isolated resource function get .(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
+    isolated resource function get Patient(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
-            r4:TokenSearchParameter[] idParam = check fhirContext.getTokenSearchParameter("_id") ?: [];
+            r4:StringSearchParameter[] idParam = check fhirContext.getStringSearchParameter("_id") ?: [];
             r4:StringSearchParameter[] familyParam = check fhirContext.getStringSearchParameter("family") ?: [];
-            string id = idParam != [] ? check idParam[0].code.ensureType() : "";
+            string id = idParam != [] ? check idParam[0].value.ensureType() : "";
             string family = familyParam != [] ? check familyParam[0].value.ensureType() : "";
             r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
             r4:BundleEntry bundleEntry = {};
