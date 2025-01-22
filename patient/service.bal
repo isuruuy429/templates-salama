@@ -48,27 +48,79 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     isolated resource function get Patient(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
         lock {
             r4:StringSearchParameter[] idParam = check fhirContext.getStringSearchParameter("_id") ?: [];
-            r4:StringSearchParameter[] familyParam = check fhirContext.getStringSearchParameter("family") ?: [];
+            r4:TokenSearchParameter[] identifierParam = check fhirContext.getTokenSearchParameter("identifier") ?: [];
+            r4:StringSearchParameter[] nameParam = check fhirContext.getStringSearchParameter("name") ?: [];
+            r4:TokenSearchParameter[] genderParam = check fhirContext.getTokenSearchParameter("gender") ?: [];
+            r4:DateSearchParameter[] birthdateParam = check fhirContext.getDateSearchParameter("birthdate") ?: [];
+            
             string id = idParam != [] ? check idParam[0].value.ensureType() : "";
-            string family = familyParam != [] ? check familyParam[0].value.ensureType() : "";
+            string identifierValue = identifierParam != [] ? check identifierParam[0].code.ensureType() : "";
+            string nameValue = nameParam != [] ? check nameParam[0].value.ensureType() : "";
+            string gender = genderParam != [] ? check genderParam[0].code.ensureType() : "";
+            string birthdate = birthdateParam != [] ? check birthdateParam[0].value.ensureType() : "";
+
             r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
             r4:BundleEntry bundleEntry = {};
             int count = 0;
+            json[] identifier = [];
+            map<json> identifierObject = {};
+
             json[] name = [];
             map<json> nameObject = {};
+
             foreach json val in data {
                 map<json> fhirResource = check val.ensureType();
-                if fhirResource.hasKey("name") {
-                    name = check fhirResource.name.ensureType();
-                    nameObject = <map<json>>name[0];
-                    string familyName = (check nameObject.family).toString();
-                    if (fhirResource.resourceType == "Patient" && (fhirResource.id == id || familyName.equalsIgnoreCaseAscii(family))) {
+                if fhirResource.hasKey("identifier") {
+                    identifier = check fhirResource.identifier.ensureType();
+                    identifierObject = <map<json>>identifier[0];
+                    string idValue = (check identifierObject.value).toString();
+                    if (fhirResource.resourceType == "Patient" && (fhirResource.id == id || idValue.equalsIgnoreCaseAscii(identifierValue))) {
                         bundleEntry = {fullUrl: "", 'resource: fhirResource};
                         bundle.entry[count] = bundleEntry;
                         count += 1;
+                        continue;
                     }
                 }
+            
+                if fhirResource.hasKey("name") {
+                    name = check fhirResource.name.ensureType();
+                    nameObject = <map<json>>name[0];
+                    string family = (check nameObject.family).toString();
+                    if (fhirResource.resourceType == "Patient" && (fhirResource.id == id || family.equalsIgnoreCaseAscii(nameValue))) {
+                        bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                        bundle.entry[count] = bundleEntry;
+                        count += 1;
+                        continue;
+                    }
+                }
+
+                if fhirResource.hasKey("gender") && fhirResource.hasKey("name"){
+                    name = check fhirResource.name.ensureType();
+                    nameObject = <map<json>>name[0];
+                    string family = (check nameObject.family).toString();
+                    if (fhirResource.resourceType == "Patient" && (fhirResource.gender == gender && family.equalsIgnoreCaseAscii(nameValue))) {
+                        bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                        bundle.entry[count] = bundleEntry;
+                        count += 1;
+                        continue;
+                    }
+                }
+
+                    if fhirResource.hasKey("birthdate") && fhirResource.hasKey("name"){
+                    name = check fhirResource.name.ensureType();
+                    nameObject = <map<json>>name[0];
+                    string family = (check nameObject.family).toString();
+                    if (fhirResource.resourceType == "Patient" && (fhirResource.birthdate == birthdate && family.equalsIgnoreCaseAscii(nameValue))) {
+                        bundleEntry = {fullUrl: "", 'resource: fhirResource};
+                        bundle.entry[count] = bundleEntry;
+                        count += 1;
+                        continue;
+                    }
+                }
+                
             }
+
+            
             if bundle.entry != [] {
                 return bundle.clone();
             }
@@ -168,6 +220,12 @@ isolated json[] data = [
                 "use": "work"
             }
         ],
+        "identifier": [
+            {
+                "system": "http://hospital.smarthealth.org/patient-ids",
+                "value": "98"
+            }
+        ],
         "birthDate": "1980-01-01",
         "gender": "female"
     },
@@ -176,6 +234,12 @@ isolated json[] data = [
         "resourceType": "Patient",
         "id": "3",
         "active": true,
+         "identifier": [
+            {
+                "system": "http://hospital.smarthealth.org/patient-ids",
+                "value": "321"
+            }
+        ],
         "name": [
             {
                 "family": "Lee",
