@@ -40,8 +40,25 @@ service / on new fhirr4:Listener(9090, apiConfig) {
     }
 
     // Search for resources based on a set of criteria.
-    isolated resource function get fhir/r4/Goal(r4:FHIRContext fhirContext) returns string {
-        return "Goal";
+    isolated resource function get Goal(r4:FHIRContext fhirContext) returns r4:Bundle|r4:OperationOutcome|r4:FHIRError|error {
+        r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
+        int count = 0; 
+
+        Goal goal = {
+            resourceType: "Goal",
+            id: "1",
+            subject: {
+                reference: "Patient/1"
+            },
+            category: [],
+            lifecycleStatus: "on-hold",
+            description: {}
+        };
+
+        r4:BundleEntry bundleEntry = {fullUrl: "", 'resource: goal};
+        bundle.entry[count] = bundleEntry;
+
+        return bundle.clone();
     }
 
     // Create a new resource.

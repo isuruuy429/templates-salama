@@ -2,7 +2,7 @@
 org = "healthcare"
 name = "health.fhir.r4.uscore501.goal"
 version = "1.0.0"
-distribution = "2201.8.1"
+distribution = "2201.8.5"
 authors = ["Ballerina"]
 keywords = ["Healthcare", "FHIR", "Goal", "r4", "health.fhir.r4.uscore501"]
 template = true
@@ -10,4 +10,4 @@ template = true
 [[dependency]]
 org = "ballerinax"
 name = "health.fhir.r4"
-version = "4.3.4"
+version = "5.1.0"

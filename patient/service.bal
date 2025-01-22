@@ -57,7 +57,7 @@ service / on new fhirr4:Listener(9090, apiConfig) {
             string identifierValue = identifierParam != [] ? check identifierParam[0].code.ensureType() : "";
             string nameValue = nameParam != [] ? check nameParam[0].value.ensureType() : "";
             string gender = genderParam != [] ? check genderParam[0].code.ensureType() : "";
-            string birthdate = birthdateParam != [] ? check birthdateParam[0].value.ensureType() : "";
+            string birthdate = birthdateParam != [] ? check birthdateParam[0].toString().ensureType() : "";
 
             r4:Bundle bundle = {identifier: {system: ""}, 'type: "searchset", entry: []};
             r4:BundleEntry bundleEntry = {};
